@@ -1,0 +1,68 @@
+name: source integrations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'integrations/**'
+      - 'engram/**'
+      - 'scripts/check_game_plugin.py'
+      - 'tests/test_checkpoint_client.py'
+      - 'tests/test_npc_memory.py'
+      - 'tests/test_discord_integration.py'
+      - '.github/workflows/source-integrations.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'integrations/**'
+      - 'engram/**'
+      - 'scripts/check_game_plugin.py'
+      - 'tests/test_checkpoint_client.py'
+      - 'tests/test_npc_memory.py'
+      - 'tests/test_discord_integration.py'
+      - '.github/workflows/source-integrations.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  paper:
+    name: Paper source and real Engram bridge
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: integrations/minecraft/paper/pom.xml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install bridge dependencies without model runtimes
+        run: |
+          python -m pip install fastapi uvicorn numpy PyYAML
+          python -m pip install --no-deps -e .
+      - name: Compile and test source against an isolated Engram bridge
+        run: python scripts/check_game_plugin.py
+
+  adapters:
+    name: NPC and Discord source contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source adapter and test dependencies
+        run: |
+          python -m pip install fastapi uvicorn numpy PyYAML pytest pytest-asyncio -r integrations/requirements-discord.txt
+          python -m pip install --no-deps -e .
+      - name: Verify actual storage and Discord registration without login
+        env:
+          HF_HUB_OFFLINE: '1'
+          TRANSFORMERS_OFFLINE: '1'
+        run: python -m pytest tests/test_checkpoint_client.py tests/test_npc_memory.py tests/test_discord_integration.py -v --tb=short

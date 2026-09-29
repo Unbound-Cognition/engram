@@ -1,0 +1,92 @@
+# matches the package defaults. inspect with `engram config show --defaults`.
+# every field supports ENGRAM_ overrides; nested fields use underscores.
+# example: ENGRAM_RETRIEVAL_MIN_CONFIDENCE=0.7
+storage_backend: sqlite          # sqlite | postgres
+db_path: ~/.local/share/engram/memory.db
+postgres_dsn: ""                 # e.g. postgresql://user:pass@localhost:5432/engram
+
+# embedding model — local or API
+# local:  BAAI/bge-small-en-v1.5 (384d, default)
+#         BAAI/bge-base-en-v1.5 (768d), BAAI/bge-large-en-v1.5 (1024d)
+#         nomic-ai/nomic-embed-text-v1.5 (768d)
+# voyage: voyage-3.5 (1024d), voyage-3.5-lite (1024d)
+#         voyage-code-3 (1024d), voyage-finance-2 (1024d), voyage-law-2 (1024d)
+# openai: text-embedding-3-small (1536d), text-embedding-3-large (3072d)
+# gemini: gemini-embedding-001 (768d)
+embedding_model: BAAI/bge-small-en-v1.5
+# reranker — local or API
+# local:  BAAI/bge-reranker-base (default)
+#         cross-encoder/ms-marco-MiniLM-L-6-v2 (smaller alternative)
+# voyage: rerank-2.5, rerank-2.5-lite
+cross_encoder_model: BAAI/bge-reranker-base
+hf_token: ""                        # Hugging Face token for authenticated downloads / rate limits
+
+# known hosted models select their provider from the model name.
+# for local models, auto picks mlx (Apple GPU) then sentence_transformers.
+embedding_backend: auto  # auto | mlx | sentence_transformers | voyage | openai | gemini
+
+# explicit dimension wins. remove this field to use the known-model registry.
+embedding_dim: 384
+
+retrieval:
+  top_k: 10
+  rrf_k: 60
+  min_confidence: 0.60        # final result gate, independent of excerpt activation
+  rerank_candidates: 20
+  rerank_fusion_alpha: 0.0    # optional blend with pre-rerank rank (0 disables score blending)
+  preserve_prior_candidate: true  # keep the best eligible hybrid match in the result window
+  rerank_passage_fallback: true  # one excerpt for weak local scores or confidence-rejected long memories
+  rerank_passage_floor: 0.001    # early activation floor; 0 disables all excerpt retries
+  dense_multiplier: 3          # candidates = top_k * multiplier
+  bm25_multiplier: 3
+  enable_query_expansion: true
+  exact_match_boost: 1.22
+  search_cache_size: 128
+
+lifecycle:
+  forgetting_half_life_days: 30
+  archive_after_days: 90
+  archive_min_importance: 0.3
+  archive_min_accesses: 3
+  promote_importance: 0.7
+  promote_accesses: 5
+  cluster_threshold: 0.8
+  cluster_min_size: 5
+  retention_mode: huber        # l2 | huber | elastic
+  huber_delta: 0.5
+  elastic_l1_ratio: 0.3
+
+llm:
+  backend: claude_cli          # claude_cli | anthropic | openai | mlx
+  model: claude-sonnet-4-20250514
+  api_key: ""                  # or set ANTHROPIC_API_KEY / OPENAI_API_KEY env var
+  mlx_model: mlx-community/Qwen2.5-3B-Instruct-4bit
+
+web:
+  host: 127.0.0.1
+  port: 8420
+  auth_token: ""               # set to enable bearer token auth on the web UI
+
+ann:
+  enabled: true
+  m: 32                        # HNSW graph connectivity (higher = better recall, more memory)
+  ef_construction: 200         # build-time search depth
+  ef_search: 100               # query-time search depth
+  max_elements: 500000         # pre-allocated capacity
+  index_path: ~/.local/share/engram/hnsw.index
+
+# Optional experiment. Normal recall output and reinforcement stay unchanged.
+# Enable with mode: shadow; disable with ENGRAM_DORMANT_RECALL_MODE=off.
+# See docs/dormant-recall.md for review and feedback commands.
+dormant_recall:
+  mode: "off"
+  candidate_limit: 50
+  dormancy_days: 30
+  min_relevance: 0.75
+  max_bonus: 0.05
+  rerank_candidates: 12
+  min_rerank_score: 0.6
+  cooldown_days: 7
+  feedback_cooldown_days: 30
+  log_max_events: 1000
+  log_retention_days: 30

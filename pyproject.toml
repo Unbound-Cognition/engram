@@ -1,0 +1,85 @@
+[build-system]
+requires = ["hatchling<=1.26.3"]
+build-backend = "hatchling.build"
+
+[project]
+name = "engram-memory-system"
+version = "0.8.1"
+description = "Memory, hybrid retrieval, entity graphs, and project continuity for agents."
+license = { text = "Engram Public Use License 1.0" }
+requires-python = ">=3.11"
+readme = "README.md"
+authors = [
+    { name = "raya" },
+]
+keywords = ["memory", "retrieval", "embeddings", "rag", "mcp", "ai", "cognitive", "hnsw"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Database",
+]
+dependencies = [
+    "sentence-transformers>=3.0.0",
+    "numpy>=1.24.0",
+    "aiosqlite>=0.19.0",
+    "psycopg[binary]>=3.2.0",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "jinja2>=3.1.0",
+    "sse-starlette>=2.0.0",
+    "pyyaml>=6.0",
+    "pymupdf>=1.24.0",
+    "hnswlib>=0.8.0",
+]
+
+[project.urls]
+Homepage = "https://engram-memory.dev"
+Documentation = "https://engram-memory.dev/getting-started/quickstart/"
+Repository = "https://github.com/Unbound-Cognition/engram"
+Issues = "https://github.com/Unbound-Cognition/engram/issues"
+
+[project.scripts]
+engram = "engram.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio", "httpx>=0.27"]
+voyage = ["voyageai>=0.3.0"]
+openai = ["openai>=1.30.0"]
+anthropic = ["anthropic>=0.40.0"]
+gemini = ["google-genai>=1.0.0"]
+api = ["voyageai>=0.3.0", "openai>=1.30.0", "anthropic>=0.40.0", "google-genai>=1.0.0"]
+docs = ["mkdocs>=1.6.0", "mkdocs-material>=9.5.0"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:importlib._bootstrap",
+    "ignore::DeprecationWarning:sys",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["engram"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/.gitignore",
+    "/engram",
+    "/tests",
+    "/integrations/**/*.py",
+    "/integrations/requirements*.txt",
+    "/examples/integrations/**/*.py",
+    "/examples/integrations/**/*.json",
+    "/benchmarks/longmemeval/*.py",
+    "/benchmarks/production_retrieval/*.py",
+    "/benchmarks/production_retrieval/dev.json",
+    "/benchmarks/production_retrieval/holdout.json",
+    "/benchmarks/production_retrieval/validation_v2.json",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+    "/config.example.yaml",
+]

@@ -1,0 +1,215 @@
+# Retrieval Internals
+
+deep dive into the 8-stage hybrid retrieval pipeline. see [Retrieval Pipeline](../guides/retrieval-pipeline.md) for the user-facing guide.
+
+## intent classification
+
+regex-based, zero cost:
+
+```python
+INTENT_PATTERNS = {
+    "why": r'\b(why|because|reason|cause|led to|resulted in)\b',
+    "when": r'\b(when|date|time|before|after|during|timeline|history)\b',
+    "who": r'\b(who|person|people|team|built|created|wrote)\b',
+    "how": r'\b(how to|steps|procedure|process|workflow|debug|fix)\b',
+}
+# default: "what" (balanced weights)
+```
+
+each intent adjusts channel weights:
+
+| intent | dense | BM25 | graph |
+|--------|-------|------|-------|
+| why | 1.0 | 0.8 | **1.5** |
+| when | 0.8 | **1.2** | 0.8 |
+| who | 0.8 | 0.8 | **1.8** |
+| how | **1.2** | 1.0 | 0.8 |
+| what | 1.0 | 1.0 | 1.0 |
+
+## RRF fusion
+
+reciprocal rank fusion from [Cormack et al. 2009](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf):
+
+```
+score(doc) = Σ weight / (k + rank + 1)
+```
+
+k defaults to `retrieval.rrf_k`, which is 60. each channel contributes
+independently, weighted by the query intent.
+
+## temporal boost
+
+`engram/temporal.py` provides the date parser and relative windows used by both
+production retrieval and the benchmark. it accepts slash-separated dates,
+hyphenated dates and ISO timestamps. candidates are boosted based on proximity
+to the query's temporal signal:
+
+- matched date in memory: 2x boost
+- episodic memories get recency decay: `exp(-0.693 * age_days / half_life)`, floored at 50%
+- access frequency: `1.0 + 0.1 * log(1 + access_count)`
+
+## cross-encoder
+
+up to `retrieval.rerank_candidates` candidates are scored as query/document
+pairs; the default shortlist is 20. the default model is
+`BAAI/bge-reranker-base`. `cross-encoder/ms-marco-MiniLM-L-6-v2` remains available
+locally, and Voyage rerankers provide a hosted option.
+
+### focused excerpt retry
+
+`retrieval.rerank_passage_fallback` defaults to `true`. an early local retry runs
+when every full-document sigmoid score is below `rerank_passage_floor` (default
+0.001), before temporal adjustments and prior blending. production search also
+retries eligible long memories whose final score falls below `min_confidence`
+(default 0.6). a different candidate's high score cannot suppress that retry.
+an excerpt already scored by the early retry is never scored again. setting the
+floor to 0 or disabling passage fallback disables both paths; hosted rerankers
+do not use them. the final confidence gate remains unchanged.
+
+each document longer than 160 words can contribute at most one excerpt. the
+selector finds a sentence with matching query terms, favoring terms that occur
+in fewer sentences, and includes its immediate neighbors. matching includes
+conservative regular English singular/plural forms. each distinct original
+query term contributes once per sentence, including when it is repeated or
+matches through multiple surface forms. repeated, query-unrelated neighboring
+boilerplate can be omitted when the anchor contains every query term (at least
+two) and does not begin with a reference such as "it" or "this". unique context,
+query-matching neighbors, and recognized qualification or negation cues stay.
+these are conservative text rules, not a guarantee of semantic completeness.
+the excerpt remains
+a contiguous slice of the source, capped at 160 whitespace-separated words.
+documents of 160 words or fewer and documents without a lexical match retain
+their full-document scores.
+
+both model calls receive the same semantic query. when an explicit reference
+date resolves a relative-time phrase, that phrase is excluded only from the
+lexical excerpt-selection query. it stays in semantic inference and temporal
+scoring. the retained raw score is `max(full_document, excerpt)`.
+
+score traces include `base_raw_score` and, for a retried document,
+`excerpt_raw_score`, `source_start`, `source_end` and `passage_words`.
+`confidence_gate_retry: 1.0` identifies the production retry of a rejected
+candidate. offsets
+are character positions in the document supplied to the reranker, with an
+exclusive end. the returned memory remains the full memory.
+
+this adds up to one extra model pair per eligible document. an excerpt can
+omit qualifications or other useful context; the word cap is not a tokenizer
+token limit. set `rerank_passage_fallback: false` to skip this work. the normal
+confidence gate still runs after score adjustments, so improving a document's
+rank does not ensure production search returns it.
+
+the 0.001 activation floor was selected during development on LongMemEval.
+evaluation on that same dataset measures development performance, not held-out
+accuracy. neither this floor nor the final confidence gate is a calibrated
+probability of correctness.
+
+### score conversion and selection
+
+local encoders return raw logits. ordinary retrieval applies one sigmoid to
+map them into the 0–1 range. hosted relevance scores are already normalized and
+do not pass through another sigmoid. a matching resolved temporal window adds
+5 in logit space; hosted scores are converted to log-odds for this adjustment.
+
+`retrieval.rerank_fusion_alpha` optionally blends this score with the reciprocal
+pre-rerank position. with zero-based rank `r` and fusion weight `a`:
+
+```text
+final_score = (1 - a) * model_score + a / (r + 1)
+```
+
+the default weight is 0; valid weights run from 0 to 1. the resulting scores are
+bounded, without separate lexical or top-three bonuses. these scores express
+ranking relevance, not measured probabilities of correctness.
+
+after the confidence gate, `preserve_prior_candidate: true` keeps the best
+eligible hybrid candidate in requests for at least two results. when that ID is
+absent from the requested prefix, it moves to the last requested position.
+the model winner remains first and every other candidate keeps its relative
+order. requests for one result keep the model winner.
+
+this coverage step does not change score values or make rejected candidates
+eligible. result order can therefore differ from numerical score order, even
+with `rerank_fusion_alpha: 0.0`. consumers should preserve the returned order.
+set `preserve_prior_candidate: false` to disable coverage.
+
+## deep MLP reranker
+
+optional 7th stage. 2-layer MLP trained on access patterns:
+
+- input: 10 features (cosine sim, importance, access count, age, layer one-hot, retention)
+- output: relevance prediction
+- persisted to `~/.local/share/engram/reranker.npz`
+- trains on which memories actually get accessed after being returned in search
+
+## noise, threshold and cache
+
+cross-encoder results receive no random ranking noise. `min_confidence` gates
+their final scores before the coverage step chooses from eligible candidates.
+searches with reranking off retain the gaussian noise term
+(σ=0.02); their RRF scores use a different scale and do not use this gate.
+
+the rerank cache includes the fusion weight, minimum confidence, coverage flag,
+passage fallback flag and its independent activation floor, so changes cannot
+return results calculated under the earlier policy.
+given the same candidates, model scores and settings, the rerank scoring step is
+deterministic.
+
+## explanations
+
+diagnostic searches explain the decisions made during one retrieval run:
+
+| interface | request |
+| --- | --- |
+| CLI | `engram search "query" --rerank --explain --json` (`--debug` is an alias) |
+| MCP | `recall_explain` with `query`, optional `top_k`, `mode`, `reference_date` |
+| native JSONL | `search_explain` with `query` and optional `top_k` |
+| REST | `GET /api/search/explain?q=...`, or `/api/search?q=...&debug=true` |
+
+omitted result limits use `retrieval.top_k` (default 10), subject to interface
+bounds. CLI explanations do not enable reranking themselves; include `--rerank`
+to inspect cross-encoder scores and confidence decisions. other interfaces use
+their ordinary reranked search path.
+
+the `explanation` object has `schema_version: 1` and includes:
+
+- `query`, `settings`, `counts` and `latency_ms`: the query forms, effective
+  retrieval policy and observed candidate counts.
+- `candidates`: memory IDs, available stage scores and one-based ranks,
+  confidence decisions, outcome and reason. passage retries include source
+  offsets and full/excerpt raw scores. missing scores mean that stage did not
+  score the candidate.
+- `final_ids`: authoritative result order. coverage and the optional deep
+  reranker can change order without changing score values.
+- `cache`, `side_effects` and `score_semantics`: the diagnostic execution
+  boundary and meaning of scores.
+
+candidate outcomes include `returned`, `below_confidence`, `outside_top_k`,
+`outside_rerank_candidates`, `not_scored`, `deep_reranker_excluded`, and
+lifecycle/profile exclusions. `eligible` means a memory passed the lifecycle
+and profile checks; it does not mean it passed confidence. forgotten, inactive,
+unavailable or profile-filtered rows expose no memory content. the bounded union
+of channel candidates is explained; absence from this report does not establish
+absence from storage.
+
+explanations bypass result-cache reads and writes, do not record memory accesses,
+and do not run dormant evaluations. MCP explanations also leave session handoffs
+unchanged. models still run, and searches with reranking off retain ordinary
+score noise; the realized adjustment is included in each affected row.
+
+inspect complete effective configuration separately through `engram config show`,
+MCP/native `config_show`, or `GET /api/config`. these reports redact credentials
+and identify each setting's source. see [configuration](../reference/config.md).
+
+## key files
+
+- `engram/retrieval.py` — the full pipeline
+- `engram/retrieval_explain.py` — observed candidate decisions and safe explanation serialization
+- `engram/embeddings.py` — dense search + cross-encoder
+- `engram/rerank_scoring.py` — shared score conversion and optional prior blend
+- `engram/rerank_passages.py` — bounded local excerpt selection and retry traces
+- `engram/rerank_selection.py` — eligible hybrid leader coverage without score changes
+- `engram/temporal.py` — shared date parsing and relative windows
+- `engram/ann_index.py` — HNSW wrapper
+- `engram/hopfield.py` — associative channel
+- `engram/deep_retrieval.py` — learned reranker

@@ -1,0 +1,4865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memories · engram</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%20fill%3D%22none%22%3E%0A%20%20%3Ctitle%3Eengram%3C%2Ftitle%3E%0A%20%20%3Cdesc%3EA%20folded%20lowercase%20e%2C%20cut%20into%20three%20continuous%20memory%20traces.%3C%2Fdesc%3E%0A%20%20%3Cpath%20d%3D%22M424%2080H224C122.4%2080%2040%20162.4%2040%20264S122.4%20448%20224%20448H424V384H224C157.7%20384%20104%20330.3%20104%20264S157.7%20144%20224%20144H360V224H208V288H424V80Z%22%20fill%3D%22%23D99A78%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M403%20101H224C134%20101%2061%20174%2061%20264S134%20427%20224%20427H424M382%20122H224C145.6%20122%2082%20185.6%2082%20264S145.6%20406%20224%20406H424M403%20102V267H208M382%20123V246H208%22%20stroke%3D%22%23111110%22%20stroke-width%3D%225%22%2F%3E%0A%3C%2Fsvg%3E">
+<style>
+:root {
+  --bg: #09090a;
+  --surface: #111113;
+  --bg2: var(--surface);
+  --bg3: #18181c;
+  --glass: color-mix(in srgb, var(--bg) 92%, transparent);
+  --glass2: color-mix(in srgb, var(--surface) 96%, transparent);
+  --line: #292427;
+  --border: var(--line);
+  --border-glow: rgba(237, 131, 182, 0.25);
+  --text: #ece8e6;
+  --muted: #928b89;
+  --text2: var(--muted);
+  --pink: #ed83b6;
+  --pink-soft: #4a2939;
+  --good: #8fd4b1;
+  --bad: #f07d87;
+  --bad-soft: #3b1d23;
+  --accent: var(--pink);
+  --accent2: #f4a5cc;
+  --green: var(--good);
+  --yellow: #f5c06d;
+  --red: var(--bad);
+  --cyan: #7bbcff;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: ui-sans-serif, system-ui, sans-serif;
+  --shadow-lg: 0 18px 50px #000c;
+}
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+body {
+  background:var(--bg);
+  color:var(--text);
+  font:14px/1.5 var(--mono);
+}
+a {
+  color:inherit;
+  text-decoration:none;
+  transition:color .15s ease;
+}
+a:hover {
+  color:var(--pink);
+}
+button,input,textarea,select {
+  font:inherit;
+}
+button,a,input,textarea,select {
+  touch-action:manipulation;
+}
+button {
+  cursor:pointer;
+  background:var(--pink);
+  color:#180d13;
+  font-weight:700;
+  border:0;
+  border-radius:2px;
+  padding:8px 14px;
+  transition:opacity .15s ease,transform .15s ease;
+}
+button:hover {
+  opacity:0.9;
+}
+button:active {
+  transform:translateY(1px);
+}
+button.secondary,.card-actions button {
+  background:transparent;
+  border:1px solid var(--line);
+  color:var(--muted);
+  font-weight:400;
+  border-radius:2px;
+  transition:color .15s ease,border-color .15s ease,background .15s ease;
+}
+button.secondary:hover,.card-actions button:hover {
+  color:var(--text);
+  border-color:var(--pink-soft);
+  background:var(--surface);
+}
+input,textarea,select {
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--line);
+  padding:8px 11px;
+  border-radius:2px;
+  outline:0;
+  font-family:var(--mono);
+  font-size:13px;
+  min-width:0;
+  max-width:100%;
+}
+input:focus,textarea:focus,select:focus {
+  border-color:var(--pink);
+}
+input[type=checkbox],input[type=range] {
+  accent-color:var(--pink);
+}
+textarea {
+  resize:vertical;
+}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible {
+  outline:1px solid var(--pink);
+  outline-offset:2px;
+}
+.layout {
+  display:grid;
+  grid-template-columns:214px minmax(0,1fr) 300px;
+  grid-template-rows:72px minmax(0,1fr);
+  height:calc(100dvh - 34px);
+}
+.header {
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:0 24px;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.brand-stack {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand-copy {
+  display:flex;
+  flex-direction:column;
+}
+.header h1 {
+  font:650 20px/1 var(--sans);
+  letter-spacing:-0.04em;
+  color:var(--text);
+}
+.brand-kicker {
+  font:10px var(--mono);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--pink);
+}
+.brand-mark {
+  display:block;
+  width:34px;
+  height:34px;
+  flex-shrink:0;
+}
+.header-actions {
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.stats {
+  font:11px var(--mono);
+  color:var(--muted);
+}
+.header-chip {
+  color:var(--muted);
+  font:11px var(--mono);
+}
+.sidebar {
+  background:var(--bg);
+  border-right:1px solid var(--line);
+  padding:20px 12px;
+  overflow-y:auto;
+}
+.sidebar-meta {
+  padding:0 10px;
+  margin-bottom:20px;
+}
+.sidebar-meta p {
+  color:var(--muted);
+  font-size:11px;
+}
+.sidebar .section {
+  margin-bottom:24px;
+}
+.section-title {
+  font:10px var(--mono);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+.sidebar .section-title {
+  padding-left:10px;
+}
+.nav-item {
+  display:block;
+  padding:8px 10px;
+  margin:1px 0;
+  border-radius:2px;
+  color:var(--muted);
+  font-size:11px;
+  transition:color .15s ease,background .15s ease;
+}
+.nav-item:hover {
+  background:var(--surface);
+  color:var(--text);
+}
+.nav-item.active {
+  background:var(--surface);
+  color:var(--text);
+  font-weight:500;
+  border-left:2px solid var(--pink);
+  padding-left:10px;
+}
+.nav-item.active:after {
+  content:'';
+}
+.main {
+  overflow:auto;
+  padding:36px 40px;
+  min-width:0;
+  scroll-behavior:smooth;
+}
+.workspace-heading {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:28px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:20px;
+}
+.workspace-heading > button {
+  white-space: nowrap;
+}
+.workspace-heading h2 {
+  font:600 24px/1.15 var(--sans);
+  letter-spacing:-0.035em;
+  margin:0;
+}
+.workspace-heading p {
+  color:var(--muted);
+  font-size:13px;
+  margin-top:8px;
+  max-width:60ch;
+}
+.workspace-heading .eyebrow {
+  font:10px var(--mono);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  display:block;
+  color:var(--pink);
+  margin-bottom:8px;
+}
+.panel {
+  background:var(--bg);
+  border-left:1px solid var(--line);
+  padding:20px 16px;
+  overflow-y:auto;
+  min-width:0;
+}
+.panel .section {
+  margin-bottom:24px;
+}
+.panel p {
+  color:var(--muted);
+}
+.inspector-shell {
+  font-size:12px;
+  overflow-wrap:anywhere;
+}
+.panel:has(#inspector.open) #inspector {
+  order:-1;
+}
+.panel {
+  display:flex;
+  flex-direction:column;
+}
+#inspector {
+  display:none;
+}
+#inspector.open {
+  display:block;
+  animation:reveal .2s ease;
+}
+.panel-close,.menu-toggle {
+  display:none;
+}
+.panel-close {
+  order:-2;
+}
+.view-panel {
+  animation:reveal .2s ease;
+}
+.view-panel>.section-title:first-child {
+  display:none;
+}
+@keyframes reveal {
+  from {
+    opacity:0;
+    transform:translateY(5px);
+  }
+  to {
+    opacity:1;
+    transform:none;
+  }
+}
+.shell-card,.context-layer,.cog-status-card,.debug-panel {
+  background:transparent;
+  border:0;
+  border-bottom:1px solid var(--line);
+  border-radius:0;
+  box-shadow:none;
+  padding:16px 0;
+}
+.memory-card {
+  border-bottom:1px solid var(--line);
+  padding:16px 0;
+  margin:0;
+  position:relative;
+  transition:background .15s ease,padding .15s ease;
+}
+.memory-card:hover {
+  background:var(--surface);
+  padding-left:10px;
+  padding-right:10px;
+}
+.memory-card .content {
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:8px;
+  cursor:pointer;
+  max-width:85ch;
+  overflow-wrap:anywhere;
+  color:var(--text);
+}
+.memory-card .content:hover {
+  color:var(--pink);
+}
+.memory-card.pinned {
+  border-left:2px solid var(--pink);
+  padding-left:12px;
+}
+.memory-card .meta {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  font:10px var(--mono);
+  color:var(--muted);
+}
+.memory-card .tag {
+  background:transparent;
+  padding:0;
+}
+.importance-bar {
+  display:none;
+}
+.card-actions {
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-top:13px;
+}
+.card-actions button,.card-actions select {
+  font-size:10px;
+  padding:4px 7px;
+  min-height:28px;
+}
+.card-actions .danger {
+  color:var(--red);
+}
+.select-cb {
+  display:none;
+}
+.select-mode .select-cb {
+  display:inline-block;
+}
+.pin-indicator {
+  color:var(--pink);
+}
+.hint-card {
+  border-bottom:1px solid var(--line);
+  padding:16px 0;
+  font-size:13px;
+}
+.hint-entities {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.entity-node,.entity-pill,.token,.followup-chip {
+  display:inline-block;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:2px;
+  padding:4px 8px;
+  margin:3px;
+  font-size:11px;
+  cursor:pointer;
+  color:var(--pink);
+  transition:border-color .15s ease;
+}
+.entity-node:hover {
+  border-color:var(--pink);
+}
+.empty {
+  padding:40px 20px;
+  text-align:left;
+  color:var(--muted);
+}
+.search-shell {
+  padding:0 0 21px;
+  margin-bottom:18px;
+}
+.search-box {
+  display:flex;
+  gap:8px;
+  width:100%;
+  margin-bottom:16px;
+}
+.search-box input {
+  flex:1;
+  font-size:14px;
+  padding:11px 14px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:2px;
+  color:var(--text);
+}
+.search-box input:focus {
+  border-color:var(--pink);
+}
+.search-toolbar,.filter-bar {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.filter-bar {
+  margin-bottom:15px;
+}
+.toggle-inline {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:12px;
+  color:var(--muted);
+}
+.chip {
+  padding:5px 9px;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:2px;
+  font-size:11px;
+  cursor:pointer;
+  color:var(--muted);
+  transition:border-color .15s ease,background .15s ease,color .15s ease;
+}
+.chip:hover,.chip.active {
+  border-color:var(--pink-soft);
+  background:var(--pink-soft);
+  color:var(--text);
+}
+.search-history {
+  display:none;
+  position:absolute;
+  top:100%;
+  left:0;
+  right:0;
+  background:var(--surface);
+  border:1px solid var(--line);
+  z-index:5;
+  box-shadow:0 8px 24px #0009;
+  max-height:200px;
+  overflow:auto;
+}
+.search-history.open {
+  display:block;
+}
+.search-history-item {
+  padding:9px 12px;
+  cursor:pointer;
+  color:var(--text);
+}
+.search-history-item:hover {
+  background:var(--bg);
+  color:var(--pink);
+}
+.tabs {
+  display:flex;
+  overflow:auto;
+  border-bottom:1px solid var(--line);
+  margin-bottom:20px;
+}
+.tab {
+  padding:10px 16px;
+  color:var(--muted);
+  white-space:nowrap;
+  cursor:pointer;
+  font-size:11px;
+  transition:color .15s ease;
+}
+.tab:hover {
+  color:var(--text);
+}
+.tab.active {
+  color:var(--text);
+  border-bottom:2px solid var(--pink);
+}
+.stat-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.stat-box {
+  border:0;
+  padding:0;
+  text-align:left;
+}
+.stat-box .value {
+  font:500 20px/1.2 var(--sans);
+  color:var(--text);
+  letter-spacing:-0.03em;
+}
+.stat-box .label {
+  font:10px var(--mono);
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+.event-item,.diary-entry,.annotation-item {
+  font-size:11px;
+  border-bottom:1px solid var(--line);
+  padding:8px 0;
+  overflow-wrap:anywhere;
+}
+.event-item .time,.diary-time,.ann-time {
+  color:var(--muted);
+  font:10px var(--mono);
+}
+.events-empty {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+}
+.event-item .type {
+  color:var(--pink);
+}
+.intel-grid,.compare-columns,.continuity-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:24px;
+}
+.intel-card h3,.continuity-card h3 {
+  font:600 17px/1.2 var(--sans);
+  letter-spacing:-0.035em;
+  margin-bottom:9px;
+}
+.intel-card p {
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:14px;
+  line-height:1.6;
+}
+.intel-row,.brief-memory,.continuity-block {
+  border-bottom:1px solid var(--line);
+  padding:12px 0;
+}
+.intel-row {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-size:12px;
+}
+.intel-row span {
+  color:var(--muted);
+}
+.brief-summary,.continuity-summary {
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.continuity-list {
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.continuity-meta,.brief-memory .meta {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  color:var(--muted);
+  font:10px var(--mono);
+  margin:9px 0;
+}
+.continuity-block h4 {
+  font:10px var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--pink);
+  margin-bottom:10px;
+}
+.continuity-block ul {
+  list-style:none;
+  font-size:12px;
+}
+.continuity-block li {
+  margin:6px 0;
+}
+.cl-header {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+.cl-name {
+  font:600 13px var(--sans);
+}
+.cl-text {
+  font-size:12px;
+  white-space:pre-wrap;
+  max-height:200px;
+  overflow:auto;
+}
+.cl-tokens {
+  font:10px var(--mono);
+  color:var(--muted);
+}
+.debug-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:12px;
+}
+.debug-pill {
+  padding:8px 0;
+  font-size:12px;
+}
+.debug-pill b {
+  display:block;
+  color:var(--muted);
+  font:10px var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.retrieval-decisions { margin-top:18px; }
+.retrieval-decisions summary { cursor:pointer; font-weight:600; padding:8px 0; }
+.retrieval-decision { border-top:1px solid var(--border); padding:12px 0; }
+.retrieval-decision p { margin:5px 0; overflow-wrap:anywhere; }
+.retrieval-decision code { font:11px var(--mono); color:var(--muted); }
+.retrieval-decision-state { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; font:11px var(--mono); }
+.retrieval-decision-state span { color:var(--muted); }
+.token-row,.followups {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:12px;
+}
+.health-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:24px;
+  margin-bottom:24px;
+}
+.health-card {
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.hc-value {
+  font:600 28px/1 var(--sans);
+  letter-spacing:-0.04em;
+}
+.hc-label {
+  font:10px var(--mono);
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+.health-card.ok .hc-value {
+  color:var(--good);
+}
+.health-card.warn .hc-value {
+  color:var(--yellow);
+}
+.health-card.bad .hc-value {
+  color:var(--bad);
+}
+.bar-row,.imp-bar {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin:6px 0;
+  font-size:11px;
+}
+.bar-label {
+  width:110px;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.bar-fill {
+  height:10px;
+  border-radius:2px;
+}
+.bar-value,.imp-val {
+  font:10px var(--mono);
+  color:var(--muted);
+}
+.imp-label {
+  width:75px;
+}
+.imp-fill-bg {
+  flex:1;
+  height:12px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:2px;
+  overflow:hidden;
+}
+.imp-fill {
+  height:100%;
+}
+.donut-container {
+  display:flex;
+  gap:24px;
+  align-items:center;
+  margin-bottom:20px;
+}
+.donut-legend {
+  font-size:11px;
+}
+.donut-legend .dot {
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  margin-right:5px;
+}
+.donut-legend div {
+  margin:6px 0;
+}
+.cog-input-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-items: flex-start;
+}
+.cog-result {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.slider-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 12px;
+}
+.slider-row label { width: 78px; }
+.slider-row input { flex: 1; }
+.slider-val { width: 30px; font: 11px var(--mono); }
+.curve-chart canvas { max-width: 100%; height: auto; }
+.cog-tabs {
+  display:flex;
+  gap:8px;
+  margin-bottom:15px;
+}
+.cog-section {
+  display:none;
+}
+.cog-section.active {
+  display:block;
+}
+.curve-chart,.surprise-gauge {
+  max-width:100%;
+}
+.heatmap-grid {
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  overflow:auto;
+}
+.heatmap-row {
+  display:flex;
+  gap:3px;
+  align-items:center;
+}
+.heatmap-cell {
+  min-width:13px;
+  height:13px;
+  border-radius:2px;
+}
+.heatmap-label {
+  font:10px var(--mono);
+  width:32px;
+  flex-shrink:0;
+  color:var(--muted);
+}
+.heatmap-legend {
+  display:flex;
+  gap:5px;
+  font-size:10px;
+  color:var(--muted);
+  margin-top:12px;
+}
+.heatmap-legend .cell {
+  width:12px;
+  height:12px;
+  border-radius:2px;
+}
+.heatmap-hours {
+  display:flex;
+  gap:3px;
+  font:9px var(--mono);
+  color:var(--muted);
+  padding-left:35px;
+}
+.heatmap-hours span {
+  width:13px;
+}
+.edit-area textarea {
+  width:100%;
+  min-height:100px;
+}
+.edit-actions {
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.export-form {
+  display:none;
+  margin-top:8px;
+}
+.export-form.open {
+  display:block;
+}
+.bulk-bar {
+  display:none;
+  position:fixed;
+  bottom:46px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--surface);
+  border:1px solid var(--pink);
+  border-radius:2px;
+  padding:12px 16px;
+  gap:10px;
+  align-items:center;
+  z-index:40;
+  max-width:95vw;
+  box-shadow:0 18px 50px #000c;
+}
+.bulk-bar.visible {
+  display:flex;
+}
+.pulse-bar {
+  height:34px;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:var(--surface);
+  border-top:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  padding:0 24px;
+  gap:20px;
+  font:10px var(--mono);
+  color:var(--muted);
+  z-index:20;
+}
+.pulse-stat {
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+.pulse-dot {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--good);
+}
+.pulse-sparkline {
+  display:flex;
+  align-items:flex-end;
+  gap:1px;
+  height:20px;
+  margin-left:auto;
+}
+.spark-bar {
+  width:3px;
+  background:var(--pink);
+}
+#toast-container {
+  position:fixed;
+  bottom:46px;
+  right:20px;
+  z-index:100;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.toast {
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--line);
+  padding:12px 18px;
+  border-radius:2px;
+  max-width:340px;
+  animation:reveal .2s;
+  box-shadow:0 18px 50px #000c;
+}
+.toast.error {
+  background:var(--bad-soft);
+  border-color:var(--bad);
+  color:#fca5a5;
+}
+.toast.success {
+  background:#15271d;
+  border-color:var(--good);
+  color:#86efac;
+}
+/* Connections / Neural Canvas View */
+.connections-toolbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--line);
+}
+.conn-search-wrap {
+  position:relative;
+  min-width:200px;
+  flex:1;
+  max-width:280px;
+}
+.conn-search-wrap input {
+  width:100%;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--text);
+  padding:7px 11px;
+  font-size:12px;
+  border-radius:2px;
+  outline:0;
+  font-family:var(--mono);
+}
+.conn-search-wrap input:focus {
+  border-color:var(--pink);
+}
+.conn-dropdown {
+  display:none;
+  position:absolute;
+  top:calc(100% + 4px);
+  left:0;
+  right:0;
+  background:var(--surface);
+  border:1px solid var(--line);
+  box-shadow:0 18px 50px #000c;
+  z-index:60;
+  max-height:220px;
+  overflow-y:auto;
+  border-radius:2px;
+}
+.conn-dropdown.open {
+  display:block;
+}
+.conn-dropdown-item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:7px 11px;
+  cursor:pointer;
+  border-bottom:1px solid color-mix(in srgb,var(--line) 40%,transparent);
+  font-size:11px;
+  transition:background .12s ease,color .12s ease;
+}
+.conn-dropdown-item:hover {
+  background:var(--bg3);
+  color:var(--pink);
+}
+.conn-dropdown-item small {
+  color:var(--muted);
+  font:9px var(--mono);
+}
+.conn-filter-group {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.conn-filter-label {
+  font:10px var(--mono);
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+.conn-chips {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  flex-wrap:wrap;
+}
+.conn-chip {
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--muted);
+  padding:5px 9px;
+  cursor:pointer;
+  font:10px var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  border-radius:2px;
+  transition:border-color .15s ease,background .15s ease,color .15s ease;
+}
+.conn-chip:hover,.conn-chip.active {
+  border-color:var(--pink-soft);
+  background:var(--pink-soft);
+  color:var(--text);
+}
+.conn-chip.active {
+  border-color:var(--pink);
+}
+.conn-actions {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.conn-btn {
+  padding:5px 9px;
+  font:11px var(--mono);
+  border-radius:2px;
+  cursor:pointer;
+}
+.conn-btn-primary {
+  border:0;
+  background:var(--pink);
+  color:#180d13;
+  font-weight:700;
+  padding:7px 13px;
+  border-radius:2px;
+  font-size:11px;
+  font-family:var(--mono);
+  cursor:pointer;
+  transition:opacity .15s ease;
+}
+.conn-btn-primary:hover {
+  opacity:0.9;
+}
+.conn-meta-stat {
+  font:10px var(--mono);
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  white-space:nowrap;
+}
+#neural-container {
+  position:relative;
+  background:#070709;
+  border:1px solid var(--line);
+  border-radius:2px;
+  overflow:hidden;
+  margin-bottom:20px;
+  height:calc(100vh - 215px);
+  min-height:560px;
+}
+#neural-canvas {
+  display:block;
+  width:100%;
+  height:100%;
+  touch-action:none;
+}
+#neural-tooltip {
+  display:none;
+  position:absolute;
+  pointer-events:none;
+  z-index:15;
+  background:var(--surface);
+  border:1px solid var(--line);
+  color:var(--text);
+  padding:10px 12px;
+  max-width:240px;
+  border-radius:2px;
+  font-size:12px;
+  box-shadow:0 18px 50px #000c;
+}
+.tt-name {
+  font:600 13px var(--sans);
+  color:var(--text);
+  letter-spacing:-0.03em;
+}
+.tt-type,.tt-count {
+  color:var(--muted);
+  font:10px var(--mono);
+  margin-top:2px;
+}
+.neural-hud-controls {
+  position:absolute;
+  left:16px;
+  bottom:16px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  z-index:10;
+}
+.hud-btn {
+  width:28px;
+  height:28px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--muted);
+  border-radius:2px;
+  cursor:pointer;
+  font:13px var(--mono);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:border-color .15s ease,color .15s ease,background .15s ease;
+}
+.hud-btn:hover {
+  border-color:var(--pink);
+  color:var(--text);
+  background:var(--bg3);
+}
+.neural-hint-overlay {
+  position:absolute;
+  right:16px;
+  bottom:12px;
+  font:9px var(--mono);
+  color:var(--muted);
+  pointer-events:none;
+  opacity:0.65;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.neural-drawer {
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  width:340px;
+  max-width:92%;
+  background:color-mix(in srgb,var(--surface) 96%,transparent);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-left:1px solid var(--line);
+  z-index:25;
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+  box-shadow:-14px 0 40px #000b;
+  padding:18px;
+  gap:16px;
+  animation:reveal .2s ease both;
+}
+.nd-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.nd-title-group {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.nd-eyebrow {
+  font:9px var(--mono);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--pink);
+}
+#nd-title {
+  font:620 19px/1.15 var(--sans);
+  letter-spacing:-0.04em;
+  margin:2px 0 6px;
+  color:var(--text);
+  overflow-wrap:anywhere;
+}
+.nd-tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+.nd-close {
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:14px;
+  cursor:pointer;
+  padding:3px 6px;
+  border-radius:2px;
+  transition:color .12s ease;
+}
+.nd-close:hover {
+  color:var(--text);
+}
+.nd-actions {
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.nd-section {
+  border-top:1px solid var(--line);
+  padding-top:12px;
+}
+.nd-section-title {
+  font:10px var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+.nd-list {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-height:180px;
+  overflow-y:auto;
+}
+.nd-item {
+  padding:8px 10px;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:2px;
+  font-size:11px;
+  cursor:pointer;
+  transition:border-color .15s ease,padding-left .15s ease;
+}
+.nd-item:hover {
+  border-color:var(--pink);
+  padding-left:12px;
+}
+.nd-item-rel {
+  color:var(--pink);
+  font:9px var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:2px;
+}
+.nd-item-text {
+  color:var(--text);
+  font-size:11px;
+  line-height:1.4;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+.graph-note {
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:18px;
+}
+.dormant-row {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  padding:16px 0;
+  border-bottom:1px solid var(--line);
+  transition:padding .15s ease, background .15s ease;
+}
+.dormant-row:hover {
+  padding-left:10px;
+  padding-right:10px;
+  background:var(--surface);
+}
+.dormant-row > button { align-self: center; }
+.dormant-row time {
+  font:10px var(--mono);
+  color:var(--muted);
+}
+.dormant-row h3 {
+  font:600 15px/1.2 var(--sans);
+  letter-spacing:-0.035em;
+  margin:5px 0;
+}
+.dormant-row p {
+  font-size:12px;
+  color:var(--muted);
+}
+.review-note {
+  background:var(--surface);
+  border-left:2px solid var(--pink);
+  padding:15px 18px;
+  font-size:12px;
+  line-height:1.7;
+  margin-bottom:18px;
+}
+.dormant-content {
+  white-space:pre-wrap;
+  font-size:13px;
+  line-height:1.7;
+  margin:20px 0;
+}
+.drawer-backdrop {
+  display:none;
+}
+.skip-link {
+  position:fixed;
+  top:-70px;
+  left:15px;
+  z-index:200;
+  background:var(--surface);
+  color:var(--pink);
+  border:1px solid var(--pink);
+  padding:10px 14px;
+  font-weight:700;
+  border-radius:2px;
+}
+.skip-link:focus {
+  top:10px;
+}
+::-webkit-scrollbar {
+  width:6px;
+  height:6px;
+}
+::-webkit-scrollbar-track {
+  background:transparent;
+}
+::-webkit-scrollbar-thumb {
+  background:var(--line);
+  border-radius:3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background:var(--pink-soft);
+}
+@media(min-width:1450px) {
+  .main {
+    padding:42px 60px;
+  }
+  .layout {
+    grid-template-columns:230px minmax(0,1fr) 330px;
+  }
+}
+@media(max-width:1150px) {
+  .layout {
+    grid-template-columns:195px minmax(0,1fr);
+  }
+  .panel {
+    display:none;
+    position:fixed;
+    right:0;
+    top:78px;
+    bottom:34px;
+    width:330px;
+    z-index:35;
+    box-shadow:-20px 0 50px rgba(0,0,0,0.6);
+  }
+  .panel.drawer-open {
+    display:flex;
+  }
+  .panel-close {
+    display:block;
+    margin-bottom:20px;
+  }
+  .main {
+    padding:30px;
+  }
+  .header .stats {
+    display:none;
+  }
+}
+@media(max-width:720px) {
+  #ctab-surprise > div { flex-wrap: wrap; }
+  .layout {
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:70px minmax(0,1fr);
+  }
+  .header {
+    padding:0 18px;
+  }
+  .header h1 {
+    font-size:26px;
+  }
+  .header .brand-kicker {
+    font-size:8px;
+  }
+  .brand-mark {
+    width:28px;
+    height:28px;
+  }
+  .brand-stack {
+    gap:8px;
+  }
+  .header-actions {
+    gap:8px;
+  }
+  .header-actions>.header-chip {
+    display:none;
+  }
+  .menu-toggle {
+    display:block;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:7px 10px;
+    border-radius:2px;
+  }
+  .menu-toggle:hover {
+    color:var(--text);
+    border-color:var(--pink-soft);
+  }
+  .sidebar {
+    display:none;
+    position:fixed;
+    top:72px;
+    bottom:34px;
+    left:0;
+    width:260px;
+    z-index:35;
+    background:var(--bg);
+    border-right:1px solid var(--line);
+  }
+  .sidebar.drawer-open {
+    display:block;
+  }
+  .drawer-backdrop.open {
+    display:block;
+    position:fixed;
+    inset:72px 0 34px;
+    background:#000b;
+    backdrop-filter:blur(5px);
+    -webkit-backdrop-filter:blur(5px);
+    z-index:30;
+  }
+  .panel {
+    top:72px;
+    width:min(360px,100vw);
+    background:var(--bg);
+    border-left:1px solid var(--line);
+  }
+  .main {
+    padding:26px 20px;
+  }
+  .workspace-heading {
+    margin-bottom:22px;
+    padding-bottom:22px;
+    gap:10px;
+  }
+  .workspace-heading > button {
+  white-space: nowrap;
+}
+.workspace-heading h2 {
+    font-size:30px;
+  }
+  .workspace-heading>button {
+    font-size:12px;
+    padding:8px 10px;
+  }
+  .workspace-heading p {
+    font-size:12px;
+  }
+  .memory-card {
+    padding:18px 0;
+  }
+  .memory-card .content {
+    font-size:14px;
+  }
+  .card-actions button,.card-actions select {
+    min-height:34px;
+    font-size:11px;
+  }
+  .search-box input {
+    width:0;
+  }
+  .pulse-bar {
+    gap:12px;
+    padding:0 15px;
+  }
+  .pulse-stat:nth-child(n+3),#pulse-total {
+    display:none;
+  }
+  .intel-grid,.compare-columns,.continuity-grid {
+    grid-template-columns:minmax(0,1fr);
+  }
+  .main .view-panel>div[style*='display:flex'] {
+    flex-wrap:wrap;
+  }
+  .main .view-panel>div[style*='display:flex'] input {
+    flex:1;
+    min-width:110px;
+  }
+  .bulk-bar {
+    flex-wrap:wrap;
+    width:95vw;
+  }
+  .tabs .tab {
+    padding:10px 12px;
+  }
+  .dormant-row {
+    grid-template-columns:1fr;
+  }
+  .dormant-row button {
+    justify-self:start;
+  }
+  table {
+    display:block;
+    overflow:auto;
+    max-width:100%;
+  }
+  .donut-container {
+    flex-wrap:wrap;
+  }
+  .health-grid {
+    grid-template-columns:1fr 1fr;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to workspace</a>
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawers()"></div>
+<div class="layout">
+  <div class="header">
+    <div class="brand-stack">
+      <svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" aria-hidden="true" focusable="false">
+        <path d="M424 80H224C122.4 80 40 162.4 40 264S122.4 448 224 448H424V384H224C157.7 384 104 330.3 104 264S157.7 144 224 144H360V224H208V288H424V80Z" fill="#D99A78"/>
+        <path d="M403 101H224C134 101 61 174 61 264S134 427 224 427H424M382 122H224C145.6 122 82 185.6 82 264S145.6 406 224 406H424M403 102V267H208M382 123V246H208" stroke="#111110" stroke-width="5"/>
+      </svg>
+      <div class="brand-copy">
+        <span class="brand-kicker">a working memory</span>
+        <h1>engram</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false" onclick="toggleNavigation()">Menu</button><button class="secondary" onclick="openActivity()">Activity</button>
+      <span id="status-line" class="stats">loading...</span>
+    </div>
+  </div>
+
+  <nav class="sidebar" aria-label="Main navigation">
+    <div class="sidebar-meta shell-card">
+      <div class="section-title" style="margin-bottom:12px">Workspace</div>
+      <p>Your archive, in context.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Workspace</div>
+      <a class="nav-item" href="#neural" onclick="showView('neural');return false">Connections</a>
+      <a class="nav-item" href="#search" onclick="showView('search');return false">Search</a>
+      <a class="nav-item" href="#dormant" onclick="showView('dormant');return false">Dormant review</a>
+      <a class="nav-item" href="#continuity" onclick="showView('continuity');return false">Continuity</a>
+      <a class="nav-item" href="#intelligence" onclick="showView('intelligence');return false">Intelligence</a>
+      <a class="nav-item active" aria-current="page" href="#memories" onclick="showView('memories');return false">Memories</a>
+      <a class="nav-item" href="#entities" onclick="showView('entities');return false">Entities</a>
+      <a class="nav-item" href="#timeline" onclick="showView('timeline');return false">Timeline</a>
+      <a class="nav-item" href="#remember" onclick="showView('remember');return false">Remember</a>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Analysis</div>
+      <a class="nav-item" href="#analytics" onclick="showView('analytics');return false">Analytics</a>
+      <a class="nav-item" href="#heatmap" onclick="showView('heatmap');return false">Heatmap</a>
+      <a class="nav-item" href="#context" onclick="showView('context');return false">Context</a>
+      <a class="nav-item" href="#health" onclick="showView('health');return false">Health</a>
+      <a class="nav-item" href="#dedup" onclick="showView('dedup');return false">Duplicates</a>
+      <a class="nav-item" href="#cognition" onclick="showView('cognition');return false">Cognition</a>
+      <a class="nav-item" href="#bridges" onclick="showView('bridges');return false">Bridges</a>
+      <a class="nav-item" href="#drift" onclick="showView('drift');return false">Drift</a>
+      <a class="nav-item" href="#patterns" onclick="showView('patterns');return false">Patterns</a>
+      <a class="nav-item" href="#ingest" onclick="showView('ingest');return false">Ingest</a>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Layers</div>
+      <a class="nav-item" href="#memories" onclick="loadLayer('working');return false">Working</a>
+      <a class="nav-item" href="#memories" onclick="loadLayer('episodic');return false">Episodic</a>
+      <a class="nav-item" href="#memories" onclick="loadLayer('semantic');return false">Semantic</a>
+      <a class="nav-item" href="#memories" onclick="loadLayer('procedural');return false">Procedural</a>
+      <a class="nav-item" href="#memories" onclick="loadLayer('codebase');return false">Codebase</a>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Stats</div>
+      <div id="stats-panel" class="stat-grid"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Actions</div>
+      <button class="secondary" style="width:100%;margin-bottom:6px" onclick="runConsolidate()">Run Dream Cycle</button>
+      <div id="consolidate-result" style="font-size:10px;color:var(--text2)"></div>
+      <button class="secondary" style="width:100%;margin-bottom:6px;margin-top:4px" onclick="toggleExportForm()">Export</button>
+      <div id="export-form" class="export-form">
+        <div style="display:flex;gap:4px;margin-bottom:4px">
+          <select id="export-format" style="font-size:11px;flex:1">
+            <option value="markdown">Markdown</option>
+            <option value="json">JSON</option>
+          </select>
+          <select id="export-layer" style="font-size:11px;flex:1">
+            <option value="">All layers</option>
+            <option value="working">Working</option>
+            <option value="episodic">Episodic</option>
+            <option value="semantic">Semantic</option>
+            <option value="procedural">Procedural</option>
+            <option value="codebase">Codebase</option>
+          </select>
+        </div>
+        <button style="width:100%;font-size:11px;padding:4px 8px" onclick="doExport()">Download</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main" id="main-content" tabindex="-1">
+    <header class="workspace-heading"><div><span class="eyebrow">Archive / workspace</span><h2 id="workspace-title">Memories</h2><p id="workspace-description">Browse what you’ve saved. Open a memory to see its context.</p></div><button onclick="showView('remember')">+ Remember</button></header>
+    <!-- Connections view -->
+    <div id="view-neural" class="view-panel" style="display:none">
+      <div class="connections-toolbar">
+        <div class="conn-search-wrap">
+          <input type="text" id="neural-search-input" placeholder="Find entity in graph... (press /)" oninput="filterNeuralSearch(this.value)" onkeydown="handleNeuralSearchKey(event)" onfocus="if(this.value)filterNeuralSearch(this.value)">
+          <div id="neural-search-dropdown" class="conn-dropdown"></div>
+        </div>
+        <div class="conn-filter-group">
+          <span class="conn-filter-label">layer</span>
+          <div class="conn-chips">
+            <button class="conn-chip active" id="chip-layer-all" onclick="setNeuralLayerFilter('all')">all</button>
+            <button class="conn-chip" id="chip-layer-working" onclick="setNeuralLayerFilter('working')">working</button>
+            <button class="conn-chip" id="chip-layer-semantic" onclick="setNeuralLayerFilter('semantic')">semantic</button>
+            <button class="conn-chip" id="chip-layer-episodic" onclick="setNeuralLayerFilter('episodic')">episodic</button>
+            <button class="conn-chip" id="chip-layer-procedural" onclick="setNeuralLayerFilter('procedural')">procedural</button>
+          </div>
+        </div>
+        <div class="conn-filter-group">
+          <span class="conn-filter-label">layout</span>
+          <div class="conn-chips">
+            <button class="conn-chip active" id="btn-mode-rings" onclick="setNeuralLayoutMode('rings')">rings</button>
+            <button class="conn-chip" id="btn-mode-cluster" onclick="setNeuralLayoutMode('cluster')">clusters</button>
+          </div>
+        </div>
+        <div class="conn-actions">
+          <button class="secondary conn-btn" onclick="fireRandomPulse()" title="Fire random synaptic pulse">⚡ pulse</button>
+          <button class="secondary conn-btn" id="btn-physics-toggle" onclick="togglePhysics()" title="Pause/resume physics simulation">⏸ pause</button>
+          <button class="secondary conn-btn" onclick="resetNeuralCamera()" title="Reset zoom and pan">⌂ reset</button>
+        </div>
+        <div class="conn-meta-stat" id="neural-summary-stat">loading graph...</div>
+      </div>
+
+      <div id="neural-container">
+        <canvas id="neural-canvas" width="900" height="560"></canvas>
+        <div id="neural-tooltip">
+          <div class="tt-name"></div>
+          <div class="tt-type"></div>
+          <div class="tt-count"></div>
+        </div>
+
+        <!-- In-canvas zoom controls HUD -->
+        <div class="neural-hud-controls">
+          <button class="hud-btn" onclick="zoomNeural(1.25)" title="Zoom in">+</button>
+          <button class="hud-btn" onclick="zoomNeural(0.8)" title="Zoom out">−</button>
+          <button class="hud-btn" onclick="resetNeuralCamera()" title="Reset view">⌂</button>
+        </div>
+
+        <!-- In-canvas Entity Constellation & Details Drawer -->
+        <div id="neural-drawer" class="neural-drawer" style="display:none">
+          <div class="nd-header">
+            <div class="nd-title-group">
+              <span class="nd-eyebrow" id="nd-layer-badge">SEMANTIC</span>
+              <h3 id="nd-title">Entity Name</h3>
+              <div class="nd-tags">
+                <span class="score-chip" id="nd-type-badge">concept</span>
+                <span class="score-chip" id="nd-mem-count">0 memories</span>
+                <span class="score-chip" id="nd-conn-count">0 connections</span>
+              </div>
+            </div>
+            <button class="nd-close" onclick="exitConstellation()" title="Close (Esc)">✕</button>
+          </div>
+          <div class="nd-actions">
+            <button class="conn-btn-primary" onclick="fireSelectedNode()">⚡ Fire Synapse</button>
+            <button class="secondary conn-btn" onclick="centerOnSelectedNode()">Target</button>
+          </div>
+          <div class="nd-section">
+            <div class="nd-section-title">Direct Connections</div>
+            <div id="nd-connections-list" class="nd-list"></div>
+          </div>
+          <div class="nd-section">
+            <div class="nd-section-title">Associated Memories</div>
+            <div id="nd-memories-list" class="nd-list"></div>
+          </div>
+          <div class="nd-section">
+            <div class="nd-section-title">Manage</div>
+            <div style="display:flex;gap:6px;margin-bottom:8px">
+              <input type="text" id="nd-alias-input" placeholder="Add alias..." style="flex:1;font-size:11px">
+              <button class="secondary" style="font-size:10px;padding:4px 8px" onclick="addAliasFromDrawer()">+</button>
+            </div>
+            <select id="nd-type-select" style="font-size:11px;width:100%" onchange="changeTypeFromDrawer(this.value)">
+              <option value="">Change entity type...</option>
+              <option value="person">person</option>
+              <option value="tool">tool</option>
+              <option value="concept">concept</option>
+              <option value="project">project</option>
+              <option value="path">path</option>
+              <option value="email">email</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="neural-hint-overlay">
+          <span>Scroll to zoom · Drag background to pan · Click node to focus · Esc to reset</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search view -->
+    <div id="view-search" class="view-panel" style="display:none">
+      <div class="search-shell shell-card">
+        <div class="section-title">Search Memory</div>
+        <div class="search-box" style="position:relative;margin-bottom:0">
+          <input type="text" id="search-input" placeholder="Search memories... (press /)" onkeydown="if(event.key==='Enter'){doSearch();hideSearchHistory()}" onfocus="showSearchHistory()" onblur="setTimeout(hideSearchHistory,200)">
+          <div id="search-history" class="search-history"></div>
+          <button onclick="doSearch()">Search</button>
+        </div>
+        <div class="search-toolbar">
+          <label class="toggle-inline">
+            <input type="checkbox" id="search-debug"> Explain retrieval
+          </label>
+          <label class="toggle-inline">
+            <input type="checkbox" id="search-hints"> Hint mode
+          </label>
+          <span class="header-chip">press <span style="color:var(--text)">/</span> to jump here</span>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <span style="font-size:10px;color:var(--text2)">Layer:</span>
+        <span class="chip" data-filter="layer" data-val="working" onclick="toggleChip(this)">working</span>
+        <span class="chip" data-filter="layer" data-val="episodic" onclick="toggleChip(this)">episodic</span>
+        <span class="chip" data-filter="layer" data-val="semantic" onclick="toggleChip(this)">semantic</span>
+        <span class="chip" data-filter="layer" data-val="procedural" onclick="toggleChip(this)">procedural</span>
+        <span style="font-size:10px;color:var(--text2);margin-left:8px">Min imp:</span>
+        <input type="range" id="filter-importance" min="0" max="1" step="0.1" value="0" style="width:60px" oninput="document.getElementById('imp-val').textContent=this.value">
+        <span id="imp-val" style="font-size:10px;color:var(--text2);width:20px">0</span>
+      </div>
+      <div style="margin-bottom:8px">
+        <button class="secondary" style="font-size:10px;padding:3px 10px" onclick="toggleSelectMode()">Select</button>
+      </div>
+      <div id="search-results"></div>
+    </div>
+
+    <div id="view-continuity" class="view-panel" style="display:none">
+      <div class="section-title">Session Continuity</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button onclick="loadContinuity()">Refresh Handoffs</button>
+      </div>
+      <div id="continuity-list" class="continuity-list"></div>
+    </div>
+
+    <div id="view-intelligence" class="view-panel" style="display:none">
+      <div class="section-title">Intelligence</div>
+      <div class="intel-grid">
+        <div class="intel-card shell-card">
+          <h3>Focus Brief</h3>
+          <p>Turn a query into a compact operating brief: dominant entities, layer mix, key memories, and follow-up pulls.</p>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <input type="text" id="brief-query" placeholder="What should Engram brief?" style="flex:1" onkeydown="if(event.key==='Enter'){loadFocusBrief()}">
+            <button onclick="loadFocusBrief()">Brief</button>
+          </div>
+          <div id="brief-results" class="intel-list"></div>
+        </div>
+
+        <div class="intel-card shell-card">
+          <h3>Query Compare</h3>
+          <p>Compare two retrieval paths and see where they overlap, where they diverge, and which entities only appear on one side.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+            <input type="text" id="compare-query-a" placeholder="Query A" onkeydown="if(event.key==='Enter'){loadQueryCompare()}">
+            <input type="text" id="compare-query-b" placeholder="Query B" onkeydown="if(event.key==='Enter'){loadQueryCompare()}">
+            <button onclick="loadQueryCompare()">Compare</button>
+          </div>
+          <div id="compare-results" class="intel-list"></div>
+        </div>
+      </div>
+
+      <div class="intel-card shell-card" style="margin-top:16px">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+          <div>
+            <h3 style="margin-bottom:4px">Recent Hotspots</h3>
+            <p style="margin:0">See what has actually been hot lately across entities, layers, memories, and source types.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="hotspots-hours">
+              <option value="24">24h</option>
+              <option value="72" selected>72h</option>
+              <option value="168">7d</option>
+            </select>
+            <button onclick="loadHotspots()">Refresh</button>
+          </div>
+        </div>
+        <div id="hotspots-results" class="intel-grid"></div>
+      </div>
+    </div>
+
+    <div id="view-memories" class="view-panel">
+      <div class="section-title">Recent Memories</div>
+      <div style="margin-bottom:8px">
+        <button class="secondary" style="font-size:10px;padding:3px 10px" onclick="toggleSelectMode()">Select</button>
+      </div>
+      <div id="memories-list"></div>
+    </div>
+
+    <div id="view-entities" class="view-panel" style="display:none">
+      <div class="section-title">Entity Graph</div>
+      <div id="entities-list"></div>
+    </div>
+
+    <div id="view-timeline" class="view-panel" style="display:none">
+      <div class="section-title">Timeline</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" id="timeline-start" placeholder="YYYY-MM-DD" value="">
+        <input type="text" id="timeline-end" placeholder="end (optional)">
+        <button onclick="loadTimeline()">Load</button>
+      </div>
+      <div id="timeline-list"></div>
+    </div>
+
+    <div id="view-remember" class="view-panel" style="display:none">
+      <div class="tabs">
+        <div class="tab active" onclick="switchRememberTab('general',this)">General</div>
+        <div class="tab" onclick="switchRememberTab('decision',this)">Decision</div>
+        <div class="tab" onclick="switchRememberTab('error',this)">Error</div>
+        <div class="tab" onclick="switchRememberTab('interaction',this)">Interaction</div>
+      </div>
+      <div id="rtab-general">
+        <textarea id="remember-content" rows="4" style="width:100%;margin-bottom:8px" placeholder="What should I remember?"></textarea>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <select id="remember-layer"><option value="episodic">Episodic</option><option value="semantic">Semantic</option><option value="procedural">Procedural</option><option value="working">Working</option></select>
+          <input type="number" id="remember-importance" value="0.7" min="0" max="1" step="0.1" style="width:60px">
+          <button onclick="doRemember()">Remember</button>
+        </div>
+      </div>
+      <div id="rtab-decision" style="display:none">
+        <textarea id="decision-text" rows="2" style="width:100%;margin-bottom:6px" placeholder="What was decided?"></textarea>
+        <textarea id="decision-rationale" rows="2" style="width:100%;margin-bottom:8px" placeholder="Why? (rationale)"></textarea>
+        <button onclick="doRememberDecision()">Store Decision</button>
+      </div>
+      <div id="rtab-error" style="display:none">
+        <textarea id="error-text" rows="2" style="width:100%;margin-bottom:6px" placeholder="What went wrong?"></textarea>
+        <textarea id="error-prevention" rows="2" style="width:100%;margin-bottom:8px" placeholder="How to prevent it"></textarea>
+        <button onclick="doRememberError()">Store Error Pattern</button>
+      </div>
+      <div id="rtab-interaction" style="display:none">
+        <textarea id="interaction-q" rows="2" style="width:100%;margin-bottom:6px" placeholder="Question"></textarea>
+        <textarea id="interaction-a" rows="2" style="width:100%;margin-bottom:8px" placeholder="Answer"></textarea>
+        <button onclick="doRememberInteraction()">Store Interaction</button>
+      </div>
+      <div id="remember-result"></div>
+    </div>
+
+    <!-- Analytics view -->
+    <div id="view-analytics" class="view-panel" style="display:none">
+      <div class="section-title">Layer Distribution</div>
+      <div class="donut-container">
+        <canvas id="donut-canvas" width="120" height="120"></canvas>
+        <div id="donut-legend" class="donut-legend"></div>
+      </div>
+      <div class="section-title">Most Recalled Memories</div>
+      <div id="top-accessed"></div>
+      <div class="section-title" style="margin-top:16px">Top Entities</div>
+      <div id="top-entities-chart"></div>
+      <div class="section-title" style="margin-top:16px">Source Distribution</div>
+      <div id="source-dist"></div>
+    </div>
+
+    <!-- Context layers viewer -->
+    <div id="view-context" class="view-panel" style="display:none">
+      <div class="section-title">Graduated Context Layers</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" id="context-query" placeholder="Query for L3 (optional)" style="flex:1">
+        <button onclick="loadContext()">Generate</button>
+      </div>
+      <div id="context-layers"></div>
+    </div>
+
+    <!-- Ingest view -->
+    <div id="view-ingest" class="view-panel" style="display:none">
+      <div class="section-title">Ingest Files</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input type="text" id="ingest-path" placeholder="~/path/to/files" style="flex:1">
+        <button onclick="doIngest()">Ingest</button>
+      </div>
+      <div style="margin-bottom:16px">
+        <button class="secondary" style="font-size:11px" onclick="doIngestSessions()">Ingest Sessions</button>
+      </div>
+      <div id="ingest-status"></div>
+      <div class="section-title" style="margin-top:16px">Recent Ingestions</div>
+      <div id="ingest-log"></div>
+    </div>
+
+    <!-- Health view -->
+    <div id="view-health" class="view-panel" style="display:none">
+      <div class="section-title">System Health</div>
+      <div id="health-grid" class="health-grid"></div>
+
+      <div class="section-title" style="margin-top:20px">Drift Score</div>
+      <div id="health-drift"></div>
+
+      <div class="section-title" style="margin-top:20px">Memory Map</div>
+      <div id="memory-map-content"></div>
+
+      <div class="section-title" style="margin-top:20px">Activity (last 24h)</div>
+      <div id="health-pulse"></div>
+
+      <div class="section-title" style="margin-top:20px">Subsystems</div>
+      <div id="health-subsystems" class="health-grid"></div>
+    </div>
+
+    <!-- Dedup view -->
+    <div id="view-dedup" class="view-panel" style="display:none">
+      <div class="section-title">Duplicate Detection</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <span style="font-size:11px;color:var(--text2)">Threshold:</span>
+        <input type="range" id="dedup-threshold" min="0.85" max="0.99" step="0.01" value="0.92" style="width:120px" oninput="document.getElementById('dedup-thresh-val').textContent=this.value">
+        <span id="dedup-thresh-val" style="font-size:11px;color:var(--text2);width:30px">0.92</span>
+        <button class="secondary" onclick="loadDuplicates()">Scan</button>
+        <button onclick="runDedup()">Auto-merge</button>
+      </div>
+      <div id="dedup-results"></div>
+    </div>
+
+    <!-- Heatmap view -->
+    <div id="view-heatmap" class="view-panel" style="display:none">
+      <div class="section-title">Activity Heatmap</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <span style="font-size:11px;color:var(--text2)">Days:</span>
+        <select id="heatmap-days" style="font-size:11px" onchange="loadHeatmap()">
+          <option value="7">7</option>
+          <option value="14">14</option>
+          <option value="30" selected>30</option>
+          <option value="60">60</option>
+        </select>
+        <span style="font-size:11px;color:var(--text2);margin-left:8px">Filter:</span>
+        <select id="heatmap-filter" style="font-size:11px" onchange="loadHeatmap()">
+          <option value="all">All</option>
+          <option value="writes">Writes</option>
+          <option value="reads">Reads</option>
+        </select>
+      </div>
+      <div id="heatmap-container"></div>
+    </div>
+
+    <!-- Cognition view -->
+    <div id="view-cognition" class="view-panel" style="display:none">
+      <div class="section-title">Cognition</div>
+      <div class="tabs">
+        <div class="tab active" onclick="switchCognitionTab('surprise',this)">Surprise</div>
+        <div class="tab" onclick="switchCognitionTab('retention',this)">Retention</div>
+        <div class="tab" onclick="switchCognitionTab('reranker',this)">Reranker</div>
+      </div>
+
+      <!-- Surprise tab -->
+      <div id="ctab-surprise">
+        <div class="cog-input-row">
+          <textarea id="surprise-text" rows="3" style="flex:1" placeholder="Enter text to check surprise/novelty..."></textarea>
+          <button onclick="checkSurprise()">Check Surprise</button>
+        </div>
+        <div style="display:flex;gap:20px;align-items:flex-start">
+          <div class="surprise-gauge">
+            <canvas id="surprise-gauge" width="200" height="200"></canvas>
+          </div>
+          <div id="surprise-result" class="cog-result" style="flex:1;min-height:100px">
+            <span style="color:var(--text2)">Enter text and click "Check Surprise" to see novelty analysis.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Retention tab -->
+      <div id="ctab-retention" style="display:none">
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <div class="slider-row">
+              <label>Half-life</label>
+              <input type="range" id="ret-halflife" min="5" max="120" value="30" oninput="document.getElementById('ret-hl-val').textContent=this.value;drawRetentionCurves()">
+              <span class="slider-val" id="ret-hl-val">30</span>
+            </div>
+            <div class="slider-row">
+              <label>Huber delta</label>
+              <input type="range" id="ret-huber-delta" min="0.1" max="2.0" step="0.1" value="0.5" oninput="document.getElementById('ret-hd-val').textContent=this.value;drawRetentionCurves()">
+              <span class="slider-val" id="ret-hd-val">0.5</span>
+            </div>
+            <div class="slider-row">
+              <label>L1 ratio</label>
+              <input type="range" id="ret-l1-ratio" min="0.0" max="1.0" step="0.05" value="0.3" oninput="document.getElementById('ret-l1-val').textContent=this.value;drawRetentionCurves()">
+              <span class="slider-val" id="ret-l1-val">0.3</span>
+            </div>
+            <div style="margin-top:8px">
+              <span class="chip active" style="font-size:9px">Huber (default)</span>
+              <span class="chip" style="font-size:9px">L2</span>
+              <span class="chip" style="font-size:9px">Elastic Net</span>
+            </div>
+          </div>
+          <div class="curve-chart">
+            <canvas id="retention-chart" width="600" height="300"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reranker tab -->
+      <div id="ctab-reranker" style="display:none">
+        <div id="reranker-status" class="cog-status-card">
+          <span style="color:var(--text2)">Loading reranker status...</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+          <label style="font-size:11px;color:var(--text2)">Epochs:</label>
+          <input type="number" id="reranker-epochs" value="50" min="1" max="500" style="width:60px;font-size:11px">
+          <label style="font-size:11px;color:var(--text2)">LR:</label>
+          <input type="number" id="reranker-lr" value="0.01" min="0.001" max="0.1" step="0.001" style="width:70px;font-size:11px">
+          <button onclick="trainReranker()">Train Reranker</button>
+        </div>
+        <div id="reranker-result"></div>
+      </div>
+    </div>
+
+    <!-- Bridges view -->
+    <div id="view-bridges" class="view-panel" style="display:none">
+      <div class="section-title">Cross-Domain Bridges</div>
+      <div id="bridges-list"></div>
+    </div>
+
+    <!-- Drift view -->
+    <div id="view-drift" class="view-panel" style="display:none">
+      <div class="section-title">Memory Drift Detection</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <button onclick="loadDrift()">Run Drift Check</button>
+        <button id="drift-preview-btn" type="button" class="secondary" onclick="return previewDriftFix()">Preview Fix</button>
+        <button id="drift-fix-btn" type="button" class="secondary" onclick="return applyDriftFix()" style="border-color:var(--bad);color:var(--bad)">Fix Now</button>
+      </div>
+      <div id="drift-score" style="margin-bottom:16px"></div>
+      <div id="drift-stats" class="health-grid" style="margin-bottom:16px"></div>
+      <div id="drift-issues"></div>
+    </div>
+
+    <!-- Patterns view -->
+    <div id="view-patterns" class="view-panel" style="display:none">
+      <div class="section-title">Pattern Extraction</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <span style="font-size:11px;color:var(--text2)">Hours:</span>
+        <select id="patterns-hours" style="font-size:11px">
+          <option value="2">2h</option>
+          <option value="4" selected>4h</option>
+          <option value="8">8h</option>
+          <option value="24">24h</option>
+          <option value="72">3 days</option>
+        </select>
+        <button onclick="loadPatterns()">Scan</button>
+        <button class="secondary" onclick="extractPatterns()">Extract &amp; Store</button>
+      </div>
+      <div id="patterns-list"></div>
+    </div>
+    <div id="view-dormant" class="view-panel" style="display:none">
+      <div class="review-note" id="dormant-mode">Loading experiment status…</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px"><span class="section-title" style="margin:0">Recent evaluations</span><button class="secondary" onclick="loadDormant()">Refresh</button></div>
+      <div id="dormant-results" aria-live="polite"></div>
+    </div>
+  </main>
+
+  <aside class="panel" aria-label="Memory inspector and activity">
+    <button class="secondary panel-close" onclick="closeDrawers()">Close panel</button>
+    <div class="section">
+      <div class="section-title">Live Stream</div>
+      <div id="event-stream"><div class="events-empty">Listening for reads, writes, recalls, promotions, and edits.</div></div>
+    </div>
+
+    <div class="section" id="inspector">
+      <div class="section-title">Inspector</div>
+      <div id="inspector-content" class="inspector-shell"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Session Diary</div>
+      <div style="display:flex;gap:4px;margin-bottom:8px">
+        <input type="text" id="diary-input" placeholder="Note..." style="flex:1;font-size:11px" onkeydown="if(event.key==='Enter')writeDiary()">
+        <button style="font-size:10px;padding:4px 8px" onclick="writeDiary()">+</button>
+      </div>
+      <div id="diary-entries" style="max-height:200px;overflow-y:auto"></div>
+    </div>
+  </aside>
+</div>
+  <div class="pulse-bar" id="pulse-bar">
+    <span class="pulse-stat"><span class="pulse-dot" style="background:var(--yellow)"></span><span class="pulse-val" id="pulse-created">0</span> created</span>
+    <span class="pulse-stat"><span class="pulse-dot" style="background:var(--cyan)"></span><span class="pulse-val" id="pulse-recalled">0</span> recalled</span>
+    <span class="pulse-stat"><span class="pulse-dot" style="background:var(--green)"></span><span class="pulse-val" id="pulse-promoted">0</span> promoted</span>
+    <span class="pulse-stat"><span class="pulse-dot" style="background:var(--red)"></span><span class="pulse-val" id="pulse-forgotten">0</span> forgotten</span>
+    <span style="color:var(--text2);font-size:10px" id="pulse-total"></span>
+    <div class="pulse-sparkline" id="pulse-sparkline"></div>
+  </div>
+<div id="toast-container"></div>
+
+<!-- Bulk action bar -->
+<div class="bulk-bar" id="bulk-bar">
+  <span id="bulk-count">0 selected</span>
+  <select id="bulk-promote-layer" style="font-size:11px">
+    <option value="">Promote to...</option>
+    <option value="working">Working</option>
+    <option value="episodic">Episodic</option>
+    <option value="semantic">Semantic</option>
+    <option value="procedural">Procedural</option>
+  </select>
+  <button style="font-size:11px;padding:3px 10px" onclick="bulkAction('promote')">Promote</button>
+  <button class="danger" style="font-size:11px;padding:3px 10px;background:var(--bg);border:1px solid var(--red);color:var(--red)" onclick="bulkAction('forget')">Forget</button>
+  <button class="secondary" style="font-size:11px;padding:3px 10px" onclick="toggleSelectMode()">Cancel</button>
+</div>
+
+<script>
+const API = '';
+async function fetchAPI(url, options = {}) {
+  const headers = new Headers(options.headers);
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (token && new URL(url, window.location.href).origin === window.location.origin) {
+    headers.set('Authorization', 'Bearer ' + token);
+  }
+  return fetch(url, {...options, headers});
+}
+async function fetchJSON(url) { const r = await fetchAPI(API + url); if (!r.ok) throw new Error('Request failed (' + r.status + ')'); return r.json(); }
+async function postJSON(url, body) { const r = await fetchAPI(API + url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}); const data = await r.json(); if (!r.ok) throw new Error(data.error || 'Request failed (' + r.status + ')'); return data; }
+
+// ============================================================
+// NEURAL VISUALIZATION — layered brain with firing impulses
+// ============================================================
+// ============================================================
+// CONNECTIONS / NEURAL VISUALIZATION — Interactive Layered Graph
+// ============================================================
+const neuralCanvas = document.getElementById('neural-canvas');
+const nCtx = neuralCanvas.getContext('2d');
+const tooltip = document.getElementById('neural-tooltip');
+const neuralDrawer = document.getElementById('neural-drawer');
+
+let neuralNodes = [];
+let neuralEdges = [];
+let hoveredNode = null;
+let hoveredEdge = null;
+let dragNode = null;
+let isPanning = false;
+let panStartX = 0, panStartY = 0;
+let mouseX = 0, mouseY = 0;
+let animFrame = null;
+let nodeById = {};
+let neuralLoaded = false;
+
+// Layout and filters
+let neuralLayoutMode = 'rings'; // 'rings' | 'cluster'
+let neuralLayerFilter = 'all';  // 'all' | 'working' | 'semantic' | 'episodic' | 'procedural'
+let neuralPhysicsRunning = true;
+
+// Constellation mode — focused subgraph view
+let constellationNode = null;
+let constellationSet = null;
+let constellationEdges = null;
+
+// Camera model (world coordinates are centered around 0,0)
+const camera = {
+  x: 0,
+  y: 0,
+  zoom: 1.0,
+  targetX: 0,
+  targetY: 0,
+  targetZoom: 1.0,
+};
+
+function screenToWorld(sx, sy) {
+  return {
+    x: (sx - camera.x) / camera.zoom,
+    y: (sy - camera.y) / camera.zoom,
+  };
+}
+
+function worldToScreen(wx, wy) {
+  return {
+    x: wx * camera.zoom + camera.x,
+    y: wy * camera.zoom + camera.y,
+  };
+}
+
+function resetNeuralCamera() {
+  const W = neuralCanvas.clientWidth || 900;
+  const H = neuralCanvas.clientHeight || 560;
+  camera.targetX = W / 2;
+  camera.targetY = H / 2;
+  camera.targetZoom = 1.0;
+}
+
+function zoomNeural(factor) {
+  const W = neuralCanvas.clientWidth || 900;
+  const H = neuralCanvas.clientHeight || 560;
+  const cx = W / 2, cy = H / 2;
+  const newZoom = Math.max(0.25, Math.min(4.0, camera.targetZoom * factor));
+  const wx = (cx - camera.targetX) / camera.targetZoom;
+  const wy = (cy - camera.targetY) / camera.targetZoom;
+  camera.targetZoom = newZoom;
+  camera.targetX = cx - wx * newZoom;
+  camera.targetY = cy - wy * newZoom;
+}
+
+function setNeuralLayoutMode(mode) {
+  neuralLayoutMode = mode;
+  const ringsBtn = document.getElementById('btn-mode-rings');
+  const clusterBtn = document.getElementById('btn-mode-cluster');
+  if (ringsBtn) ringsBtn.classList.toggle('active', mode === 'rings');
+  if (clusterBtn) clusterBtn.classList.toggle('active', mode === 'cluster');
+  // awaken physics simulation
+  for (const n of neuralNodes) {
+    n.vx += (Math.random() - 0.5) * 2;
+    n.vy += (Math.random() - 0.5) * 2;
+  }
+}
+
+function setNeuralLayerFilter(layer) {
+  neuralLayerFilter = layer;
+  ['all', 'working', 'semantic', 'episodic', 'procedural'].forEach(l => {
+    const el = document.getElementById('chip-layer-' + l);
+    if (el) el.classList.toggle('active', l === layer);
+  });
+}
+
+function togglePhysics() {
+  neuralPhysicsRunning = !neuralPhysicsRunning;
+  const btn = document.getElementById('btn-physics-toggle');
+  if (btn) {
+    btn.textContent = neuralPhysicsRunning ? '⏸ pause' : '▶ resume';
+  }
+}
+
+// layer config — concentric rings around world (0, 0)
+const LAYER_CONFIG = {
+  working:    { ring: 0.18, color: {r:237,g:131,b:182}, label: 'WORKING' },
+  semantic:   { ring: 0.38, color: {r:143,g:212,b:177}, label: 'SEMANTIC' },
+  episodic:   { ring: 0.62, color: {r:123,g:188,b:255}, label: 'EPISODIC' },
+  procedural: { ring: 0.84, color: {r:171,g:148,b:255}, label: 'PROCEDURAL' },
+};
+
+const TYPE_COLORS = {
+  person:  {r:123,g:188,b:255}, tool:{r:143,g:212,b:177}, concept:{r:237,g:131,b:182},
+  project: {r:245,g:192,b:109}, email:{r:171,g:148,b:255}, url:{r:123,g:188,b:255},
+  path:    {r:143,g:212,b:177}, date:{r:245,g:192,b:109}, default:{r:171,g:148,b:255},
+};
+
+const FIRE_COLORS = {
+  read:  {r:123,g:188,b:255},
+  write: {r:237,g:131,b:182},
+};
+
+// ambient floating particles
+let ambientParticles = [];
+function initAmbient(W, H) {
+  ambientParticles = [];
+  for (let i = 0; i < 48; i++) {
+    ambientParticles.push({
+      x: (Math.random() - 0.5) * 1200,
+      y: (Math.random() - 0.5) * 1200,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: (Math.random() - 0.5) * 0.2,
+      r: 0.8 + Math.random() * 1.5,
+      alpha: 0.08 + Math.random() * 0.14,
+      color: [LAYER_CONFIG.semantic, LAYER_CONFIG.procedural, LAYER_CONFIG.episodic, LAYER_CONFIG.working][Math.floor(Math.random() * 4)].color,
+    });
+  }
+}
+
+let impulses = [];
+let bursts = [];
+let diffusions = [];
+let migrations = [];
+
+function resizeCanvas() {
+  const container = document.getElementById('neural-container');
+  if (!container) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = container.clientWidth;
+  const h = Math.max(520, window.innerHeight - 220);
+  neuralCanvas.width = w * dpr;
+  neuralCanvas.height = h * dpr;
+  neuralCanvas.style.width = w + 'px';
+  neuralCanvas.style.height = h + 'px';
+  nCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (camera.x === 0 && camera.y === 0) {
+    resetNeuralCamera();
+    camera.x = camera.targetX;
+    camera.y = camera.targetY;
+  }
+}
+
+async function loadNeuralData() {
+  const data = await fetchJSON('/api/neural?limit=150');
+  const W = neuralCanvas.clientWidth || 900;
+  const H = neuralCanvas.clientHeight || 560;
+  const maxR = Math.min(W, H) * 0.44;
+
+  const layerGroups = {};
+  for (const n of (data.nodes || [])) {
+    const layer = n.layer || 'episodic';
+    if (!layerGroups[layer]) layerGroups[layer] = [];
+    layerGroups[layer].push(n);
+  }
+
+  neuralNodes = [];
+  for (const [layer, nodes] of Object.entries(layerGroups)) {
+    const cfg = LAYER_CONFIG[layer] || LAYER_CONFIG.episodic;
+    const ringR = cfg.ring * maxR;
+    const jitter = maxR * 0.08;
+    nodes.forEach((n, i) => {
+      const angle = (i / nodes.length) * Math.PI * 2 + (Math.random() - 0.5) * 0.25;
+      const r = ringR + (Math.random() - 0.5) * jitter * 2;
+      neuralNodes.push({
+        ...n,
+        layer,
+        x: Math.cos(angle) * r,
+        y: Math.sin(angle) * r,
+        vx: 0,
+        vy: 0,
+        r: Math.max(4, Math.min(22, 3.5 + Math.sqrt(n.size) * 1.5 + Math.sqrt(n.degree || 0) * 1.2)),
+        glow: 0,
+        pulsePhase: Math.random() * Math.PI * 2,
+      });
+    });
+  }
+
+  const nodeMap = {};
+  neuralNodes.forEach(n => nodeMap[n.id] = n);
+  nodeById = nodeMap;
+
+  neuralEdges = (data.edges || [])
+    .filter(e => nodeMap[e.source_entity_id] && nodeMap[e.target_entity_id])
+    .map(e => ({
+      source: nodeMap[e.source_entity_id],
+      target: nodeMap[e.target_entity_id],
+      strength: e.strength || 1,
+      relation_type: e.relation_type || '',
+    }));
+
+  const statEl = document.getElementById('neural-summary-stat');
+  if (statEl) {
+    statEl.textContent = `${neuralNodes.length} entities · ${neuralEdges.length} connections`;
+  }
+
+  // initial fires
+  for (const f of (data.fires || [])) {
+    const ft = f.fire_type || 'read';
+    for (const id of (f.entity_ids || '').split(',')) {
+      const node = nodeMap[id.trim()];
+      if (node) fireNode(node, ft);
+    }
+  }
+
+  if (camera.x === 0 && camera.y === 0) {
+    resetNeuralCamera();
+  }
+
+  if (!animFrame) animate();
+}
+
+function fireNode(node, fireType = 'read') {
+  if (!node) return;
+  node.glow = 1.6;
+  const isWrite = fireType === 'write';
+  const color = isWrite ? FIRE_COLORS.write : FIRE_COLORS.read;
+  neuralEdges.forEach(e => {
+    if (e.source === node || e.target === node) {
+      const from = e.source === node ? e.source : e.target;
+      const to = e.source === node ? e.target : e.source;
+      impulses.push({
+        from, to,
+        progress: 0,
+        speed: isWrite ? 0.015 + Math.random() * 0.008 : 0.010 + Math.random() * 0.006,
+        color,
+        size: isWrite ? 4.5 : 3.2,
+        cascaded: false,
+        fireType,
+      });
+    }
+  });
+  bursts.push({ x: node.x, y: node.y, radius: node.r, maxRadius: node.r * (isWrite ? 14 : 8), progress: 0, color });
+}
+
+function fireRandomPulse() {
+  if (!neuralNodes.length) return;
+  const candidates = neuralNodes.filter(n => (n.degree || 0) > 0);
+  const node = (candidates.length ? candidates : neuralNodes)[Math.floor(Math.random() * (candidates.length || neuralNodes.length))];
+  const type = Math.random() > 0.4 ? 'read' : 'write';
+  fireNode(node, type);
+  toast(`Synaptic pulse triggered on ${node.name}`, 'info');
+}
+
+function fireSelectedNode() {
+  if (constellationNode) {
+    fireNode(constellationNode, 'write');
+  }
+}
+
+function centerOnSelectedNode() {
+  if (!constellationNode) return;
+  zoomToNode(constellationNode);
+}
+
+function zoomToNode(node) {
+  const W = neuralCanvas.clientWidth || 900;
+  const H = neuralCanvas.clientHeight || 560;
+  const targetZoom = Math.max(1.4, camera.zoom);
+  camera.targetZoom = targetZoom;
+  camera.targetX = (W * 0.42) - node.x * targetZoom;
+  camera.targetY = (H * 0.5) - node.y * targetZoom;
+}
+
+async function enterConstellation(node) {
+  constellationNode = node;
+  constellationSet = new Set([node.id]);
+  constellationEdges = [];
+  neuralEdges.forEach(e => {
+    if (e.source === node || e.target === node) {
+      constellationSet.add(e.source.id);
+      constellationSet.add(e.target.id);
+      constellationEdges.push(e);
+    }
+  });
+
+  zoomToNode(node);
+
+  const drawer = document.getElementById('neural-drawer');
+  if (drawer) {
+    drawer.style.display = 'flex';
+    document.getElementById('nd-layer-badge').textContent = (node.layer || 'episodic').toUpperCase();
+    document.getElementById('nd-title').textContent = node.name;
+    document.getElementById('nd-type-badge').textContent = node.type || 'concept';
+    document.getElementById('nd-mem-count').textContent = `${node.size} memories`;
+    document.getElementById('nd-conn-count').textContent = `${node.degree || constellationEdges.length} connections`;
+    
+    // Direct connections list
+    const connList = document.getElementById('nd-connections-list');
+    if (constellationEdges.length === 0) {
+      connList.innerHTML = '<div style="color:var(--muted);font-size:11px">No direct connections recorded yet.</div>';
+    } else {
+      connList.innerHTML = constellationEdges.map(e => {
+        const other = e.source === node ? e.target : e.source;
+        const rel = e.relation_type || 'relates to';
+        return `<div class="nd-item" onclick="jumpToEntity('${other.id}')">
+          <div class="nd-item-rel">→ ${escapeHtml(rel)}</div>
+          <div style="font-weight:600;color:var(--text)">${escapeHtml(other.name)} <span style="font-size:9px;color:var(--muted)">(${other.type})</span></div>
+        </div>`;
+      }).join('');
+    }
+
+    // Associated memories list
+    const memList = document.getElementById('nd-memories-list');
+    memList.innerHTML = '<div style="color:var(--muted);font-size:11px">Loading associated memories...</div>';
+    try {
+      const res = await fetchJSON(`/api/entities/${node.id}/graph`);
+      let memories = (res && res.memories) || [];
+      if (!memories.length && node.name) {
+        try {
+          const searchData = await fetchJSON(`/api/search?q=${encodeURIComponent(node.name)}&limit=6`);
+          if (searchData && Array.isArray(searchData.results)) {
+            memories = searchData.results;
+          }
+        } catch (_) {}
+      }
+      if (memories && memories.length) {
+        memList.innerHTML = memories.map(m => `
+          <div class="nd-item" onclick="inspectMemory('${m.id}')" title="Inspect memory">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+              <span class="tag ${m.layer || 'episodic'}">${m.layer || 'episodic'}</span>
+              <span style="font:9px var(--mono);color:var(--muted)">${m.created_at ? new Date(m.created_at * 1000).toLocaleDateString() : ''}</span>
+            </div>
+            <div class="nd-item-text">${escapeHtml(m.content || '')}</div>
+          </div>
+        `).join('');
+      } else {
+        memList.innerHTML = '<div style="color:var(--muted);font-size:11px">No memories directly mentioning this entity.</div>';
+      }
+    } catch(e) {
+      memList.innerHTML = '<div style="color:var(--muted);font-size:11px">Could not load memories.</div>';
+    }
+  }
+}
+
+function exitConstellation() {
+  constellationNode = null;
+  constellationSet = null;
+  constellationEdges = null;
+  const drawer = document.getElementById('neural-drawer');
+  if (drawer) drawer.style.display = 'none';
+  resetNeuralCamera();
+}
+
+function jumpToEntity(id) {
+  const node = nodeById[id];
+  if (!node) return;
+  enterConstellation(node);
+  fireNode(node, 'read');
+  const dd = document.getElementById('neural-search-dropdown');
+  if (dd) dd.classList.remove('open');
+  const input = document.getElementById('neural-search-input');
+  if (input) input.value = node.name;
+}
+
+async function addAliasFromDrawer() {
+  if (!constellationNode) return;
+  const input = document.getElementById('nd-alias-input');
+  const alias = input.value.trim();
+  if (!alias) return;
+  await postJSON(`/api/entities/${constellationNode.id}/alias`, {alias});
+  input.value = '';
+  toast(`Added alias "${alias}" to ${constellationNode.name}`, 'success');
+}
+
+async function changeTypeFromDrawer(newType) {
+  if (!constellationNode || !newType) return;
+  await postJSON(`/api/entities/${constellationNode.id}/type`, {type: newType});
+  constellationNode.type = newType;
+  document.getElementById('nd-type-badge').textContent = newType;
+  toast(`Updated ${constellationNode.name} type to ${newType}`, 'success');
+}
+
+function filterNeuralSearch(val) {
+  const q = val.trim().toLowerCase();
+  const dd = document.getElementById('neural-search-dropdown');
+  if (!q || !neuralNodes.length) {
+    if (dd) dd.classList.remove('open');
+    return;
+  }
+  const matches = neuralNodes.filter(n => n.name.toLowerCase().includes(q)).slice(0, 8);
+  if (!matches.length) {
+    dd.innerHTML = '<div style="padding:8px 12px;color:var(--muted);font-size:11px">No entities matching “' + escapeHtml(q) + '”</div>';
+    dd.classList.add('open');
+    return;
+  }
+  dd.innerHTML = matches.map(m => `
+    <div class="conn-dropdown-item" onclick="jumpToEntity('${m.id}')">
+      <div>
+        <strong>${escapeHtml(m.name)}</strong>
+        <span style="font-size:9px;color:var(--muted);margin-left:6px">${m.type}</span>
+      </div>
+      <small>${m.size} mems · ${m.layer}</small>
+    </div>
+  `).join('');
+  dd.classList.add('open');
+}
+
+function handleNeuralSearchKey(e) {
+  if (e.key === 'Escape') {
+    const dd = document.getElementById('neural-search-dropdown');
+    if (dd) dd.classList.remove('open');
+    e.target.blur();
+  } else if (e.key === 'Enter') {
+    const dd = document.getElementById('neural-search-dropdown');
+    const firstItem = dd ? dd.querySelector('.conn-dropdown-item') : null;
+    if (firstItem) {
+      firstItem.click();
+    }
+  }
+}
+
+// Mouse and wheel controls on canvas
+neuralCanvas.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const rect = neuralCanvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const zoomFactor = e.deltaY < 0 ? 1.14 : 0.88;
+  const newZoom = Math.max(0.25, Math.min(4.0, camera.targetZoom * zoomFactor));
+  const wx = (mx - camera.targetX) / camera.targetZoom;
+  const wy = (my - camera.targetY) / camera.targetZoom;
+  camera.targetZoom = newZoom;
+  camera.targetX = mx - wx * newZoom;
+  camera.targetY = my - wy * newZoom;
+}, { passive: false });
+
+neuralCanvas.addEventListener('mousemove', (e) => {
+  const rect = neuralCanvas.getBoundingClientRect();
+  mouseX = e.clientX - rect.left;
+  mouseY = e.clientY - rect.top;
+
+  if (isPanning) {
+    camera.targetX += (mouseX - panStartX);
+    camera.targetY += (mouseY - panStartY);
+    panStartX = mouseX;
+    panStartY = mouseY;
+    neuralCanvas.style.cursor = 'grabbing';
+    return;
+  }
+
+  const worldPos = screenToWorld(mouseX, mouseY);
+
+  if (dragNode) {
+    dragNode.x = worldPos.x;
+    dragNode.y = worldPos.y;
+    dragNode.vx = 0;
+    dragNode.vy = 0;
+    neuralCanvas.style.cursor = 'grabbing';
+    return;
+  }
+
+  hoveredNode = null;
+  for (let i = neuralNodes.length - 1; i >= 0; i--) {
+    const n = neuralNodes[i];
+    const dx = worldPos.x - n.x, dy = worldPos.y - n.y;
+    const hitRadius = (n.r + 6);
+    if (dx*dx + dy*dy < hitRadius * hitRadius) {
+      hoveredNode = n;
+      break;
+    }
+  }
+
+  if (hoveredNode) {
+    neuralCanvas.style.cursor = 'pointer';
+    tooltip.style.display = 'block';
+    tooltip.style.left = Math.min(window.innerWidth - 260, mouseX + 16) + 'px';
+    tooltip.style.top = Math.max(10, mouseY - 14) + 'px';
+    tooltip.querySelector('.tt-name').textContent = hoveredNode.name;
+    tooltip.querySelector('.tt-type').textContent = `${hoveredNode.type} · ${hoveredNode.layer}`;
+    tooltip.querySelector('.tt-count').textContent = `${hoveredNode.size} memories · ${hoveredNode.degree || 0} connections`;
+  } else {
+    neuralCanvas.style.cursor = 'grab';
+    tooltip.style.display = 'none';
+  }
+});
+
+neuralCanvas.addEventListener('mousedown', (e) => {
+  const rect = neuralCanvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  if (hoveredNode) {
+    dragNode = hoveredNode;
+    neuralCanvas.style.cursor = 'grabbing';
+  } else {
+    isPanning = true;
+    panStartX = mx;
+    panStartY = my;
+    neuralCanvas.style.cursor = 'grabbing';
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  dragNode = null;
+  isPanning = false;
+  if (neuralCanvas) neuralCanvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
+});
+
+neuralCanvas.addEventListener('click', () => {
+  if (hoveredNode) {
+    if (constellationNode === hoveredNode) {
+      exitConstellation();
+    } else {
+      enterConstellation(hoveredNode);
+    }
+    fireNode(hoveredNode);
+  } else if (!isPanning) {
+    exitConstellation();
+  }
+});
+
+neuralCanvas.addEventListener('dblclick', () => {
+  if (hoveredNode) {
+    zoomToNode(hoveredNode);
+  } else {
+    resetNeuralCamera();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (activeView !== 'neural') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+    if (e.key === 'Escape') e.target.blur();
+    return;
+  }
+  if (e.key === 'Escape') {
+    exitConstellation();
+  } else if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    togglePhysics();
+  } else if (e.key === '+' || e.key === '=') {
+    zoomNeural(1.25);
+  } else if (e.key === '-' || e.key === '_') {
+    zoomNeural(0.8);
+  } else if (e.key === '0') {
+    resetNeuralCamera();
+  } else if (e.key === 'f' || e.key === 'F') {
+    fireRandomPulse();
+  } else if (e.key === '/') {
+    e.preventDefault();
+    const input = document.getElementById('neural-search-input');
+    if (input) { input.focus(); input.select(); }
+  }
+});
+
+function animate() {
+  const W = neuralCanvas.clientWidth || 900;
+  const H = neuralCanvas.clientHeight || 560;
+  const maxR = Math.min(W, H) * 0.44;
+
+  camera.x += (camera.targetX - camera.x) * 0.14;
+  camera.y += (camera.targetY - camera.y) * 0.14;
+  camera.zoom += (camera.targetZoom - camera.zoom) * 0.14;
+
+  nCtx.clearRect(0, 0, W, H);
+
+  // ambient floating particles
+  if (!ambientParticles.length) initAmbient(W, H);
+  for (const p of ambientParticles) {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < -W) p.x = W; if (p.x > W) p.x = -W;
+    if (p.y < -H) p.y = H; if (p.y > H) p.y = -H;
+    const sx = W / 2 + p.x;
+    const sy = H / 2 + p.y;
+    if (sx >= 0 && sx <= W && sy >= 0 && sy <= H) {
+      nCtx.beginPath();
+      nCtx.arc(sx, sy, p.r, 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},${p.alpha})`;
+      nCtx.fill();
+    }
+  }
+
+  // physics update
+  if (neuralPhysicsRunning && neuralNodes.length) {
+    const dt = 0.016;
+    const repulsion = neuralLayoutMode === 'cluster' ? 550 : 350;
+    const attraction = neuralLayoutMode === 'cluster' ? 0.0035 : 0.0015;
+    const damping = 0.88;
+
+    for (let i = 0; i < neuralNodes.length; i++) {
+      const a = neuralNodes[i];
+      for (let j = i + 1; j < neuralNodes.length; j++) {
+        const b = neuralNodes[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const distSq = dx * dx + dy * dy || 1;
+        if (distSq < 250000) {
+          const dist = Math.sqrt(distSq);
+          const force = repulsion / (distSq + 200);
+          const fx = (dx / dist) * force * dt;
+          const fy = (dy / dist) * force * dt;
+          a.vx += fx; a.vy += fy;
+          b.vx -= fx; b.vy -= fy;
+        }
+      }
+    }
+
+    for (const e of neuralEdges) {
+      const dx = e.target.x - e.source.x, dy = e.target.y - e.source.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      const targetDist = neuralLayoutMode === 'cluster' ? 60 : 100;
+      const force = (dist - targetDist) * attraction * (e.strength || 1);
+      const fx = (dx / dist) * force * dt;
+      const fy = (dy / dist) * force * dt;
+      e.source.vx += fx; e.source.vy += fy;
+      e.target.vx -= fx; e.target.vy -= fy;
+    }
+
+    for (const n of neuralNodes) {
+      if (n === dragNode) continue;
+      if (neuralLayoutMode === 'rings') {
+        const cfg = LAYER_CONFIG[n.layer] || LAYER_CONFIG.episodic;
+        const targetR = cfg.ring * maxR;
+        const currentR = Math.sqrt(n.x * n.x + n.y * n.y) || 1;
+        const rDiff = targetR - currentR;
+        n.vx += (n.x / currentR) * rDiff * 0.002;
+        n.vy += (n.y / currentR) * rDiff * 0.002;
+      } else {
+        n.vx -= n.x * 0.0007;
+        n.vy -= n.y * 0.0007;
+      }
+
+      n.vx *= damping;
+      n.vy *= damping;
+      n.x += n.vx;
+      n.y += n.vy;
+      n.glow *= 0.992;
+      n.pulsePhase += 0.016;
+    }
+  }
+
+  // Camera world transform
+  nCtx.save();
+  nCtx.translate(camera.x, camera.y);
+  nCtx.scale(camera.zoom, camera.zoom);
+
+  // Background coordinate matrix
+  const gridRange = maxR * 1.5;
+  nCtx.fillStyle = 'rgba(255,255,255,0.04)';
+  for (let gx = -gridRange; gx <= gridRange; gx += 60) {
+    for (let gy = -gridRange; gy <= gridRange; gy += 60) {
+      nCtx.fillRect(gx, gy, 1.2, 1.2);
+    }
+  }
+
+  // Layer rings (in rings mode)
+  if (neuralLayoutMode === 'rings') {
+    for (const [layer, cfg] of Object.entries(LAYER_CONFIG)) {
+      const r = cfg.ring * maxR;
+      const c = cfg.color;
+      const isFiltered = neuralLayerFilter !== 'all' && neuralLayerFilter !== layer;
+      const ringAlpha = isFiltered ? 0.03 : 0.16;
+
+      nCtx.beginPath();
+      nCtx.arc(0, 0, r, 0, Math.PI * 2);
+      nCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${ringAlpha * 0.4})`;
+      nCtx.lineWidth = 5;
+      nCtx.stroke();
+
+      nCtx.beginPath();
+      nCtx.arc(0, 0, r, 0, Math.PI * 2);
+      nCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${ringAlpha})`;
+      nCtx.lineWidth = 0.75;
+      nCtx.stroke();
+
+      nCtx.font = '600 9px ui-monospace, SFMono-Regular, Menlo, monospace';
+      nCtx.fillStyle = `rgba(${c.r},${c.g},${c.b},${isFiltered ? 0.2 : 0.55})`;
+      nCtx.textAlign = 'center';
+      nCtx.fillText(cfg.label, 0, -r - 8);
+    }
+  }
+
+  // Center core glow
+  const coreGrad = nCtx.createRadialGradient(0, 0, 0, 0, 0, maxR * 0.12);
+  coreGrad.addColorStop(0, 'rgba(237,131,182,0.16)');
+  coreGrad.addColorStop(1, 'rgba(237,131,182,0)');
+  nCtx.beginPath();
+  nCtx.arc(0, 0, maxR * 0.12, 0, Math.PI * 2);
+  nCtx.fillStyle = coreGrad;
+  nCtx.fill();
+
+  // Edges
+  const inConstellation = constellationSet !== null;
+  for (const e of neuralEdges) {
+    const edgeInSubgraph = inConstellation && constellationSet.has(e.source.id) && constellationSet.has(e.target.id);
+    const layerMatch = neuralLayerFilter === 'all' || e.source.layer === neuralLayerFilter || e.target.layer === neuralLayerFilter;
+    
+    let alpha = 0.06 + e.strength * 0.03;
+    if (inConstellation) {
+      alpha = edgeInSubgraph ? 0.55 : 0.02;
+    } else if (!layerMatch) {
+      alpha = 0.02;
+    }
+
+    const sc = TYPE_COLORS[e.source.type] || TYPE_COLORS.default;
+    const tc = TYPE_COLORS[e.target.type] || TYPE_COLORS.default;
+
+    nCtx.beginPath();
+    nCtx.moveTo(e.source.x, e.source.y);
+    nCtx.lineTo(e.target.x, e.target.y);
+
+    if (edgeInSubgraph) {
+      const grad = nCtx.createLinearGradient(e.source.x, e.source.y, e.target.x, e.target.y);
+      grad.addColorStop(0, `rgba(${sc.r},${sc.g},${sc.b},${alpha})`);
+      grad.addColorStop(1, `rgba(${tc.r},${tc.g},${tc.b},${alpha})`);
+      nCtx.strokeStyle = grad;
+      nCtx.lineWidth = 1.8;
+    } else {
+      nCtx.strokeStyle = `rgba(130,130,165,${alpha})`;
+      nCtx.lineWidth = Math.min(2, 0.4 + e.strength * 0.3);
+    }
+    nCtx.stroke();
+
+    if (edgeInSubgraph && e.relation_type) {
+      const mx = (e.source.x + e.target.x) / 2;
+      const my = (e.source.y + e.target.y) / 2;
+      nCtx.save();
+      nCtx.font = '500 8px ui-monospace, SFMono-Regular, Menlo, monospace';
+      const labelText = e.relation_type.toUpperCase();
+      const textW = nCtx.measureText(labelText).width;
+      nCtx.fillStyle = '#111113';
+      nCtx.strokeStyle = '#292427';
+      nCtx.lineWidth = 1;
+      nCtx.fillRect(mx - textW/2 - 4, my - 6, textW + 8, 12);
+      nCtx.strokeRect(mx - textW/2 - 4, my - 6, textW + 8, 12);
+      nCtx.fillStyle = '#ed83b6';
+      nCtx.textAlign = 'center';
+      nCtx.textBaseline = 'middle';
+      nCtx.fillText(labelText, mx, my);
+      nCtx.restore();
+    }
+  }
+
+  // Impulses
+  const aliveImpulses = [];
+  for (const imp of impulses) {
+    imp.progress += imp.speed;
+    if (imp.progress >= 1) {
+      if (!imp.cascaded) {
+        imp.to.glow = Math.max(imp.to.glow, 0.9);
+        imp.cascaded = true;
+      }
+      continue;
+    }
+    aliveImpulses.push(imp);
+
+    const px = imp.from.x + (imp.to.x - imp.from.x) * imp.progress;
+    const py = imp.from.y + (imp.to.y - imp.from.y) * imp.progress;
+    const c = imp.color;
+
+    const trailLen = 5;
+    for (let t = 0; t < trailLen; t++) {
+      const tp = imp.progress - t * imp.speed * 2;
+      if (tp < 0) break;
+      const tx = imp.from.x + (imp.to.x - imp.from.x) * tp;
+      const ty = imp.from.y + (imp.to.y - imp.from.y) * tp;
+      const ta = (1 - t / trailLen) * 0.45;
+      nCtx.beginPath();
+      nCtx.arc(tx, ty, imp.size * (1 - t / trailLen * 0.4), 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(${c.r},${c.g},${c.b},${ta})`;
+      nCtx.fill();
+    }
+
+    nCtx.beginPath();
+    nCtx.arc(px, py, imp.size, 0, Math.PI * 2);
+    nCtx.fillStyle = `rgba(${Math.min(255, c.r + 70)},${Math.min(255, c.g + 70)},${Math.min(255, c.b + 70)},0.95)`;
+    nCtx.fill();
+  }
+  impulses = aliveImpulses;
+
+  // Bursts
+  const aliveBursts = [];
+  for (const b of bursts) {
+    b.progress += 0.025;
+    if (b.progress >= 1) continue;
+    aliveBursts.push(b);
+    const r = b.radius + (b.maxRadius - b.radius) * b.progress;
+    const alpha = (1 - b.progress) * 0.55;
+    nCtx.beginPath();
+    nCtx.arc(b.x, b.y, r, 0, Math.PI * 2);
+    nCtx.strokeStyle = `rgba(${b.color.r},${b.color.g},${b.color.b},${alpha})`;
+    nCtx.lineWidth = 2 * (1 - b.progress);
+    nCtx.stroke();
+  }
+  bursts = aliveBursts;
+
+  // Nodes
+  for (const n of neuralNodes) {
+    const c = TYPE_COLORS[n.type] || TYPE_COLORS.default;
+    const isHovered = n === hoveredNode;
+    const isFocusNode = inConstellation && n === constellationNode;
+    const nodeInSubgraph = !inConstellation || constellationSet.has(n.id);
+    const layerMatch = neuralLayerFilter === 'all' || n.layer === neuralLayerFilter;
+    const breathe = Math.sin(n.pulsePhase) * 0.1 + 0.92;
+
+    const dimFactor = (nodeInSubgraph && layerMatch) ? 1.0 : 0.07;
+
+    if (nodeInSubgraph && layerMatch) {
+      const baseGlow = isFocusNode ? 0.45 : isHovered ? 0.3 : 0.05 + breathe * 0.03;
+      const glowR = n.r * (3.0 + n.glow * 10 + (isFocusNode ? 6 : 0));
+      const ga = Math.min(0.85, baseGlow + n.glow * 0.6);
+      const grad = nCtx.createRadialGradient(n.x, n.y, n.r * 0.2, n.x, n.y, glowR);
+      grad.addColorStop(0, `rgba(${c.r},${c.g},${c.b},${ga})`);
+      grad.addColorStop(0.4, `rgba(${c.r},${c.g},${c.b},${ga * 0.25})`);
+      grad.addColorStop(1, `rgba(${c.r},${c.g},${c.b},0)`);
+      nCtx.beginPath();
+      nCtx.arc(n.x, n.y, glowR, 0, Math.PI * 2);
+      nCtx.fillStyle = grad;
+      nCtx.fill();
+    }
+
+    const bodyAlpha = (isHovered ? 1 : (0.55 + n.glow * 0.45)) * dimFactor;
+    const bodyR = n.r * breathe;
+    const bodyGrad = nCtx.createRadialGradient(n.x - bodyR * 0.3, n.y - bodyR * 0.3, 0, n.x, n.y, bodyR);
+    bodyGrad.addColorStop(0, `rgba(${Math.min(255, c.r + 60)},${Math.min(255, c.g + 60)},${Math.min(255, c.b + 60)},${bodyAlpha * 0.5})`);
+    bodyGrad.addColorStop(0.6, `rgba(${c.r},${c.g},${c.b},${bodyAlpha * 0.25})`);
+    bodyGrad.addColorStop(1, `rgba(${c.r},${c.g},${c.b},${bodyAlpha * 0.08})`);
+
+    nCtx.beginPath();
+    nCtx.arc(n.x, n.y, bodyR, 0, Math.PI * 2);
+    nCtx.fillStyle = bodyGrad;
+    nCtx.fill();
+
+    nCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${bodyAlpha * (isFocusNode ? 1 : 0.7)})`;
+    nCtx.lineWidth = isFocusNode ? 2.2 : isHovered ? 1.8 : 0.9;
+    nCtx.stroke();
+
+    const nucR = n.r * (isFocusNode ? 0.38 : 0.3);
+    const nucAlpha = (0.75 + n.glow * 0.25) * dimFactor;
+    nCtx.beginPath();
+    nCtx.arc(n.x, n.y, nucR, 0, Math.PI * 2);
+    nCtx.fillStyle = `rgba(${Math.min(255, c.r + 120)},${Math.min(255, c.g + 120)},${Math.min(255, c.b + 120)},${nucAlpha})`;
+    nCtx.fill();
+
+    const showLabel = (inConstellation && nodeInSubgraph) || isHovered || isFocusNode || n.r > 10 || camera.zoom > 1.3;
+    if (showLabel && layerMatch) {
+      const labelAlpha = nodeInSubgraph ? (isHovered || isFocusNode ? 0.98 : 0.72) : 0.12;
+      nCtx.font = `${isHovered || isFocusNode ? '600 11' : '500 9'}px ui-sans-serif, system-ui, sans-serif`;
+      nCtx.textAlign = 'center';
+      nCtx.fillStyle = `rgba(236,232,230,${labelAlpha})`;
+      if (labelAlpha > 0.5) {
+        nCtx.shadowColor = '#000c';
+        nCtx.shadowBlur = 4;
+      }
+      nCtx.fillText(n.name, n.x, n.y + n.r + 13);
+      nCtx.shadowBlur = 0;
+    }
+  }
+
+  nCtx.restore();
+
+  animFrame = requestAnimationFrame(animate);
+}
+
+function fireNeuronByName(name, fireType = 'read') {
+  const n = neuralNodes.find(n => n.name.toLowerCase() === name.toLowerCase());
+  if (n) fireNode(n, fireType);
+}
+
+// poll SQLite for fires from MCP server (every 2s)
+let lastFireTimestamp = 0;
+let firesPollHandle = null;
+async function pollFires() {
+  if (!shouldPollFires()) return;
+  if (neuralNodes.length === 0) return;
+  if (lastFireTimestamp === 0) lastFireTimestamp = Date.now() / 1000 - 120;
+  try {
+    const data = await fetchJSON(`/api/neural/fires?since=${lastFireTimestamp}`);
+    if (data.timestamp) lastFireTimestamp = data.timestamp - 1;
+    for (const f of (data.fires || [])) {
+      const ft = f.fire_type || 'read';
+      for (const id of (f.entity_ids || '').split(',')) {
+        const node = nodeById[id.trim()];
+        if (!node) continue;
+        fireNode(node, ft);
+      }
+    }
+  } catch(e) {}
+}
+
+// ============================================================
+// VIEWS (kept functions: loadMemories, loadLayer, loadEntities, loadTimeline)
+// ============================================================
+async function loadMemories() {
+  const data = await fetchJSON('/api/memories?limit=50');
+  document.getElementById('memories-list').innerHTML = data.map(memoryCard).join('') || '<div class="empty">No memories here yet.</div>';
+}
+
+async function loadLayer(layer) {
+  const data = await fetchJSON(`/api/memories?layer=${layer}&limit=50`);
+  closeDrawers();
+  activeView = 'memories';
+  if(location.hash !== '#memories')history.pushState(null,'','#memories');
+  updateWorkspace('memories');
+  document.getElementById('workspace-title').textContent = layer.charAt(0).toUpperCase() + layer.slice(1) + ' memories';
+  document.querySelectorAll('[id^="view-"]').forEach(el => el.style.display = 'none');
+  document.getElementById('view-memories').style.display = 'block';
+  document.getElementById('memories-list').innerHTML =
+    `<div class="section-title">${layer} memories</div>` + data.map(memoryCard).join('');
+  // highlight the correct layer nav item
+  document.querySelectorAll('.sidebar .nav-item').forEach(el => {
+    const onclick = el.getAttribute('onclick') || '';
+    if (onclick.includes(`'${layer}'`)) {
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
+  });
+}
+
+async function loadEntities() {
+  const data = await fetchJSON('/api/entities?limit=100');
+  const el = document.getElementById('entities-list');
+  let html = '<div style="margin-bottom:12px">';
+  for (const e of data) {
+    html += `<span class="entity-node ${escapeHtml(e.type)}" role="button" tabindex="0" onkeydown="if(event.key==='Enter')inspectEntity('${e.id}')" onclick="inspectEntity('${e.id}')">${escapeHtml(e.name)} <span style="color:var(--text2)">(${e.memory_count})</span></span>`;
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+async function loadTimeline() {
+  const start = document.getElementById('timeline-start').value;
+  const end = document.getElementById('timeline-end').value;
+  let url = `/api/timeline?start=${start}`;
+  if (end) url += `&end=${end}`;
+  const data = await fetchJSON(url);
+  document.getElementById('timeline-list').innerHTML = data.map(memoryCard).join('');
+}
+
+async function inspectMemory(id) {
+  const data = await fetchJSON(`/api/memories/${id}`);
+  const inspector = document.getElementById('inspector');
+  inspector.classList.add('open');
+  openActivity();
+  let html = `<div>
+    <div style="margin-bottom:6px"><b>Layer:</b> <span class="tag ${data.layer}">${data.layer}</span></div>
+    <div style="margin-bottom:6px"><b>Importance:</b> ${data.importance} | <b>Retrievals:</b> ${data.access_count}</div>
+    <div style="margin-bottom:6px"><b>Date:</b> ${data.fact_date || 'none'} | <b>Source:</b> ${data.source_type}</div>
+    <div style="margin-bottom:8px;line-height:1.5">${escapeHtml(data.content)}</div>`;
+  if (data.hypothetical_queries && data.hypothetical_queries.length) {
+    html += '<div style="margin-bottom:6px"><b>Hypothetical queries:</b>';
+    for (const q of data.hypothetical_queries) html += `<div style="color:var(--text2);font-size:10px">&bull; ${escapeHtml(q)}</div>`;
+    html += '</div>';
+  }
+  if (data.entities && data.entities.length) {
+    html += '<div style="margin-bottom:6px"><b>Entities:</b> ';
+    for (const e of data.entities) html += `<span class="entity-node ${e.entity_type}">${escapeHtml(e.canonical_name)}</span>`;
+    html += '</div>';
+  }
+  // Annotations
+  const annotations = (data.metadata && data.metadata.annotations) || [];
+  html += '<div style="margin-top:8px"><b>Annotations:</b></div>';
+  if (annotations.length) {
+    for (const ann of annotations) {
+      const t = ann.timestamp ? new Date(ann.timestamp * 1000).toLocaleString() : '';
+      html += `<div class="annotation-item"><span class="ann-time">${t}</span> ${escapeHtml(ann.text || ann.note || '')}</div>`;
+    }
+  } else {
+    html += '<div style="font-size:10px;color:var(--text2);margin-bottom:4px">No annotations yet</div>';
+  }
+  html += `<div style="display:flex;gap:4px;margin-top:4px">
+    <input type="text" id="annotate-input-${id}" placeholder="Add note..." style="flex:1;font-size:11px">
+    <button style="font-size:10px;padding:2px 8px" onclick="addAnnotation('${id}')">Add Note</button>
+  </div>`;
+  html += '</div>';
+  document.getElementById('inspector-content').innerHTML = html;
+}
+
+function memoryCard(m) {
+  const content = m.content.length > 200 ? m.content.slice(0,200) + '...' : m.content;
+  const scoreHtml = m.score !== undefined ? `<span class="tag">score: ${m.score}</span>` : '';
+  const invalidated = m.metadata && m.metadata.invalidated;
+  const contentStyle = invalidated ? 'text-decoration:line-through;opacity:0.5' : '';
+  const isPinned = m.metadata && m.metadata.pinned;
+  const layerClass = `layer-${m.layer || 'episodic'}`;
+  const pinnedClass = isPinned ? ' pinned' : '';
+  const imp = m.importance || 0;
+  const impPct = (imp * 100).toFixed(0);
+  // importance bar gradient: red(0) -> yellow(0.5) -> green(1)
+  const impR = Math.round(255 * (1 - imp));
+  const impG = Math.round(255 * imp);
+  return `<div class="memory-card ${layerClass}${pinnedClass}" ${invalidated ? 'style="border-color:var(--red);opacity:0.7"' : ''}>
+    <input type="checkbox" class="select-cb" data-id="${m.id}" onchange="updateBulkCount()">
+    <div class="content" id="content-${m.id}" style="${contentStyle}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();inspectMemory('${m.id}')}" onclick="inspectMemory('${m.id}')">${escapeHtml(content)}</div>
+    <div class="importance-bar" style="width:${impPct}%;background:linear-gradient(90deg,rgb(${impR},${impG},0),rgb(${impR},${impG},0))"></div>
+    <div class="meta">
+      <span class="tag ${m.layer}">${m.layer}</span>
+      <span class="tag">importance: ${m.importance?.toFixed(2) || '?'}</span>
+      ${m.fact_date ? `<span class="tag">${m.fact_date}</span>` : ''}
+      ${scoreHtml}
+      ${m.access_count ? `<span class="tag">retrievals: ${m.access_count}</span>` : ''}
+      ${invalidated ? '<span class="tag" style="color:var(--red)">INVALID</span>' : ''}
+      ${isPinned ? '<span class="pin-indicator">pinned</span>' : ''}
+    </div>
+    <div class="card-actions">
+      <select onchange="promoteMemory('${m.id}',this.value);this.selectedIndex=0" title="Change layer">
+        <option value="">layer...</option>
+        <option value="working">working</option>
+        <option value="episodic">episodic</option>
+        <option value="semantic">semantic</option>
+        <option value="procedural">procedural</option>
+      </select>
+      <button onclick="event.stopPropagation();togglePin('${m.id}',${!!isPinned})">${isPinned?'unpin':'pin'}</button>
+      <button onclick="event.stopPropagation();showSimilar('${m.id}')">similar</button>
+      <button onclick="event.stopPropagation();showImportance('${m.id}')">explain</button>
+      <button onclick="event.stopPropagation();startEdit('${m.id}')">edit</button>
+      <button data-copy="${escapeHtml(m.content)}" onclick="event.stopPropagation();navigator.clipboard.writeText(this.dataset.copy).then(()=>toast('Copied','success'))">copy</button>
+      <button onclick="event.stopPropagation();invalidateMemory('${m.id}')">invalidate</button>
+      <button class="danger" onclick="event.stopPropagation();forgetMemory('${m.id}',this)">forget</button>
+    </div>
+  </div>`;
+}
+
+function escapeHtml(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+let activeView = 'memories';
+let initialBootComplete = false;
+
+function getVisibleViewName() {
+  const current = document.querySelector('.view-panel:not([style*="display: none"]):not([style*="display:none"])');
+  return current ? current.id.replace('view-', '') : activeView;
+}
+
+function shouldPollEvents() {
+  return document.visibilityState === 'visible';
+}
+
+function shouldPollPulse() {
+  return document.visibilityState === 'visible';
+}
+
+function shouldPollFires() {
+  return document.visibilityState === 'visible' && activeView === 'neural' && neuralLoaded;
+}
+
+function restartPollers() {
+  if (eventsPollHandle) clearInterval(eventsPollHandle);
+  if (firesPollHandle) clearInterval(firesPollHandle);
+  if (pulsePollHandle) clearInterval(pulsePollHandle);
+  if (statsPollHandle) clearInterval(statsPollHandle);
+
+  eventsPollHandle = setInterval(() => { if (shouldPollEvents()) pollEvents(); }, 4000);
+  firesPollHandle = setInterval(() => { if (shouldPollFires()) pollFires(); }, 4000);
+  pulsePollHandle = setInterval(() => { if (shouldPollPulse()) pollPulse(); }, 12000);
+  statsPollHandle = setInterval(() => { if (document.visibilityState === 'visible') loadStats(); }, 60000);
+}
+
+async function bootDashboard() {
+  activeView = getVisibleViewName() || 'neural';
+  await loadStats();
+  await loadDiary();
+  const requestedView = location.hash.slice(1);
+  if (document.getElementById('view-' + requestedView)) showView(requestedView);
+  else await loadMemories();
+  if (activeView === 'neural') {
+    await loadNeuralData();
+    neuralLoaded = true;
+  }
+  initialBootComplete = true;
+  if (shouldPollEvents()) await pollEvents();
+  if (shouldPollPulse()) await pollPulse();
+  restartPollers();
+}
+
+// --- Stats ---
+async function loadStats() {
+  const data = await fetchJSON('/api/stats');
+  const mems = data.memories || {};
+  document.getElementById('stats-panel').innerHTML = `
+    <div class="stat-box"><div class="value">${mems.total || 0}</div><div class="label">Total</div></div>
+    <div class="stat-box"><div class="value">${data.entities || 0}</div><div class="label">Entities</div></div>
+    <div class="stat-box"><div class="value">${mems.episodic || 0}</div><div class="label">Episodic</div></div>
+    <div class="stat-box"><div class="value">${mems.semantic || 0}</div><div class="label">Semantic</div></div>
+    <div class="stat-box"><div class="value">${mems.procedural || 0}</div><div class="label">Procedural</div></div>
+    <div class="stat-box"><div class="value">${data.db_size_mb || 0}</div><div class="label">MB</div></div>`;
+  document.getElementById('status-line').textContent =
+    `${mems.total || 0} memories | ${data.entities || 0} entities | ${data.relationships || 0} links`;
+}
+
+// --- Live Events (poll SQLite events table — works across MCP + web processes) ---
+let lastEventId = 0;
+let eventsPollHandle = null;
+let statsPollHandle = null;
+let pulsePollHandle = null;
+async function pollEvents() {
+  if (!shouldPollEvents()) return;
+  try {
+    const data = await fetchJSON('/api/events?limit=30');
+    const el = document.getElementById('event-stream');
+    // data comes newest-first from the API
+    const newEvents = [];
+    for (const evt of data) {
+      if (evt.id <= lastEventId) break;
+      newEvents.push(evt);
+    }
+    if (newEvents.length > 0) {
+      lastEventId = newEvents[0].id;
+      // deduplicate: group memory_read events with same detail within 2s
+      const deduped = [];
+      const seen = new Set();
+      for (const evt of newEvents) {
+        const key = `${evt.event_type}|${evt.detail || ''}|${Math.floor(evt.created_at / 2)}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        // count how many were collapsed
+        const count = newEvents.filter(e =>
+          e.event_type === evt.event_type &&
+          e.detail === evt.detail &&
+          Math.abs(e.created_at - evt.created_at) < 2
+        ).length;
+        deduped.push({...evt, count});
+      }
+      for (const evt of deduped) {
+        const t = new Date(evt.created_at * 1000).toLocaleTimeString();
+        const et = evt.event_type || '';
+        const typeClass = et.includes('write') ? 'write' :
+                          et === 'recall' ? 'search' :
+                          et.includes('read') ? 'read' :
+                          et.includes('forget') || et.includes('promote') ? 'write' : 'search';
+        const detail = evt.detail ? evt.detail.slice(0, 50) : '';
+        const countBadge = evt.count > 1 ? ` <span style="color:var(--text2)">(${evt.count})</span>` : '';
+        el.insertAdjacentHTML('afterbegin',
+          `<div class="event-item"><span class="time">${t}</span> <span class="type ${typeClass}">${et}</span> ${detail}${countBadge}</div>`);
+      }
+      while (el.children.length > 100) el.lastChild.remove();
+    }
+  } catch(e) {}
+}
+
+// --- Toast notifications ---
+function toast(msg, type='info') {
+  const el = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  el.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// --- Memory actions ---
+async function promoteMemory(id, layer) {
+  if (!layer) return;
+  await postJSON(`/api/memories/${id}/promote`, {layer});
+  toast(`Promoted to ${layer}`, 'success');
+  const updated = await fetchJSON(`/api/memories/${encodeURIComponent(id)}`);
+  document.querySelectorAll('.memory-card').forEach(card => {
+    if (card.querySelector('.select-cb')?.dataset.id === id) card.outerHTML = memoryCard(updated);
+  });
+}
+async function forgetMemory(id, btn) {
+  if (!confirm('Forget this memory?')) return;
+  await postJSON(`/api/memories/${id}/forget`, {});
+  btn.closest('.memory-card').style.display = 'none';
+}
+async function invalidateMemory(id) {
+  const reason = prompt('Why is this no longer true?');
+  if (reason === null) return;
+  await postJSON(`/api/memories/${id}/invalidate`, {reason});
+  // refresh
+  const card = document.querySelector(`.memory-card [onclick*="${id}"]`);
+  if (card) card.style.textDecoration = 'line-through';
+}
+
+// --- Inline Editing ---
+async function startEdit(id) {
+  const contentEl = document.getElementById('view-' + activeView)?.querySelector('#content-' + CSS.escape(id));
+  if (!contentEl) return;
+  const memory = await fetchJSON(`/api/memories/${encodeURIComponent(id)}`);
+  const currentText = memory.content;
+  contentEl.outerHTML = `<div class="edit-area" id="edit-area-${id}">
+    <textarea id="edit-textarea-${id}" rows="4">${escapeHtml(currentText)}</textarea>
+    <div class="edit-actions">
+      <button onclick="saveEdit('${id}')" style="font-size:10px;padding:2px 8px">Save</button>
+      <button class="secondary" onclick="cancelEdit('${id}')" style="font-size:10px;padding:2px 8px">Cancel</button>
+    </div>
+  </div>`;
+}
+
+async function saveEdit(id) {
+  const textarea = document.getElementById('edit-textarea-' + id);
+  if (!textarea) return;
+  const newContent = textarea.value;
+  try {
+    await postJSON(`/api/memories/${id}/edit`, {content: newContent});
+    toast('Memory updated', 'success');
+    // re-render the card by re-fetching
+    const editArea = document.getElementById('edit-area-' + id);
+    if (editArea) {
+      const truncated = newContent.length > 200 ? newContent.slice(0,200) + '...' : newContent;
+      editArea.outerHTML = `<div class="content" id="content-${id}" onclick="inspectMemory('${id}')">${escapeHtml(truncated)}</div>`;
+    }
+  } catch(e) {
+    toast('Edit failed: ' + e, 'error');
+  }
+}
+
+function cancelEdit(id) {
+  // reload the current view to restore original card
+  const currentView = document.querySelector('[id^="view-"]:not([style*="display: none"]):not([style*="display:none"])');
+  if (currentView) {
+    const viewName = currentView.id.replace('view-', '');
+    showView(viewName);
+  }
+}
+
+// --- Annotations ---
+async function addAnnotation(id) {
+  const input = document.getElementById('annotate-input-' + id);
+  if (!input || !input.value.trim()) return;
+  try {
+    await postJSON(`/api/memories/${id}/annotate`, {note: input.value.trim()});
+    toast('Annotation added', 'success');
+    inspectMemory(id);
+  } catch(e) {
+    toast('Failed to annotate: ' + e, 'error');
+  }
+}
+
+// --- Search filters ---
+let activeFilters = {};
+function toggleChip(el) {
+  el.classList.toggle('active');
+  // collect active layer filters
+  const layers = [];
+  document.querySelectorAll('.chip[data-filter="layer"].active').forEach(c => layers.push(c.dataset.val));
+  activeFilters.layers = layers.length ? layers : null;
+}
+
+// --- Search History ---
+function getSearchHistory() {
+  try { return JSON.parse(localStorage.getItem('engram_search_history') || '[]'); } catch(e) { return []; }
+}
+function addSearchHistory(q) {
+  let hist = getSearchHistory();
+  hist = hist.filter(h => h !== q);
+  hist.unshift(q);
+  if (hist.length > 20) hist = hist.slice(0, 20);
+  localStorage.setItem('engram_search_history', JSON.stringify(hist));
+}
+function showSearchHistory() {
+  const hist = getSearchHistory();
+  const el = document.getElementById('search-history');
+  if (!hist.length) { el.classList.remove('open'); return; }
+  el.innerHTML = hist.map(h => `<div class="search-history-item" onmousedown="event.preventDefault();document.getElementById('search-input').value='${escapeHtml(h)}';hideSearchHistory();doSearch()">${escapeHtml(h)}</div>`).join('');
+  el.classList.add('open');
+}
+function hideSearchHistory() {
+  document.getElementById('search-history').classList.remove('open');
+}
+
+async function doSearch() {
+  const q = document.getElementById('search-input').value;
+  if (!q) return;
+  addSearchHistory(q);
+  const debug = document.getElementById('search-debug').checked;
+  const hints = document.getElementById('search-hints').checked;
+  const minImp = parseFloat(document.getElementById('filter-importance').value);
+  const layers = activeFilters.layers;
+
+  let url, data;
+
+  if (debug && (hints || layers || minImp > 0)) {
+    document.getElementById('search-results').innerHTML = '<div class="empty">Turn off hints and clear the layer and importance filters to explain the full retrieval pipeline.</div>';
+    return;
+  }
+
+  if (hints) {
+    // Hint mode
+    data = await fetchJSON(`/api/search/hints?q=${encodeURIComponent(q)}&top_k=10`);
+    const el = document.getElementById('search-results');
+    const results = data.results || data.hints || [];
+    if (!results.length) { el.innerHTML = '<div class="empty">No memories found</div>'; return; }
+    el.innerHTML = results.map(r => hintCard(r)).join('');
+    return;
+  }
+
+  if (layers || minImp > 0) {
+    // use filtered endpoint
+    let params = `q=${encodeURIComponent(q)}&top_k=15&min_importance=${minImp}`;
+    if (layers && layers.length === 1) params += `&layer=${layers[0]}`;
+    data = await fetchJSON(`/api/search/filtered?${params}`);
+  } else {
+    data = await fetchJSON(`/api/search?q=${encodeURIComponent(q)}&top_k=10&debug=${debug}`);
+  }
+
+  const el = document.getElementById('search-results');
+  let html = '';
+  if (debug && data.debug) {
+    html += `<div class="debug-panel">
+      <div><b>Latency:</b> ${data.debug.latency_ms}ms</div>
+      <div class="debug-grid">
+        <div class="debug-pill"><b>Intent</b>${escapeHtml(data.debug.intent || 'what')}</div>
+        <div class="debug-pill"><b>Cache</b>${data.explanation ? 'bypassed for explanation' : (data.debug.cache_hit ? 'hit' : 'miss')}</div>
+        <div class="debug-pill"><b>Dense</b>${data.debug.dense_count}</div>
+        <div class="debug-pill"><b>BM25</b>${data.debug.bm25_count}</div>
+        <div class="debug-pill"><b>Graph</b>${data.debug.graph_count}</div>
+        <div class="debug-pill"><b>RRF</b>${data.debug.rrf_count}</div>
+      </div>
+      ${(data.debug.expanded_terms || []).length ? `<div class="token-row">${data.debug.expanded_terms.map(term => `<span class="token">${escapeHtml(term)}</span>`).join('')}</div>` : ''}
+      ${(data.debug.phrase_terms || []).length ? `<div class="token-row">${data.debug.phrase_terms.map(term => `<span class="token">"${escapeHtml(term)}"</span>`).join('')}</div>` : ''}
+      ${data.explanation ? renderRetrievalDecisions(data.explanation) : ''}
+    </div>`;
+  }
+  const results = data.results || [];
+  if (!results.length) html += '<div class="empty">No memories found</div>';
+  for (const r of results) html += memoryCard(r);
+  el.innerHTML = html;
+  // fire matching entities on neural map
+  const entityIds = data.entity_ids || [];
+  if (entityIds.length > 0) {
+    for (const id of entityIds) {
+      const node = nodeById[id];
+      if (node) fireNode(node, 'read');
+    }
+  } else {
+    q.split(/\s+/).forEach(w => fireNeuronByName(w));
+  }
+}
+
+function renderRetrievalDecisions(explanation) {
+  const candidates = explanation.candidates || [];
+  const rejected = candidates.filter(item => item.outcome !== 'returned').length;
+  return `<p>Explanation leaves memory access history and dormant evaluations unchanged. Scores are ranking signals, not probabilities.</p>
+    <details class="retrieval-decisions" open>
+      <summary>${candidates.length} candidates · ${rejected} not returned</summary>
+      ${candidates.map(item => `<div class="retrieval-decision">
+        <div class="retrieval-decision-state"><b>${escapeHtml(String(item.outcome || '').replaceAll('_', ' '))}</b>
+          <span>${Number.isFinite(item.scores?.final) ? `score ${item.scores.final.toFixed(4)}` : 'not scored'}${item.confidence?.applied ? ` · cutoff ${Number(item.confidence.threshold).toFixed(4)}` : ''}</span></div>
+        <p>${escapeHtml(item.reason || '')}</p>
+        ${item.content ? `<p>${escapeHtml(item.content.slice(0, 320))}${item.content.length > 320 ? '…' : ''}</p>` : ''}
+        <code>${escapeHtml(item.memory_id || '')}</code>
+      </div>`).join('')}
+    </details>`;
+}
+
+async function loadFocusBrief() {
+  const q = document.getElementById('brief-query').value.trim();
+  const el = document.getElementById('brief-results');
+  if (!q) {
+    el.innerHTML = '<div class="empty">Enter a query to build a brief.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="empty">Building brief...</div>';
+  const data = await fetchJSON(`/api/intelligence/brief?q=${encodeURIComponent(q)}&top_k=8`);
+  const memories = data.key_memories || [];
+  const entities = data.top_entities || [];
+  const layers = data.top_layers || [];
+  const followups = data.suggested_queries || [];
+  el.innerHTML = `
+    <div class="brief-summary">${escapeHtml(data.summary || 'No summary available.')}</div>
+    <div class="compare-columns" style="margin-bottom:12px">
+      <div class="continuity-block">
+        <h4>Dominant entities</h4>
+        <div class="intel-list">${entities.length ? entities.map(item => `<div class="intel-row"><b>${escapeHtml(item.name)}</b><span>${item.count}</span></div>`).join('') : '<div class="events-empty">No linked entities</div>'}</div>
+      </div>
+      <div class="continuity-block">
+        <h4>Layer mix</h4>
+        <div class="intel-list">${layers.length ? layers.map(item => `<div class="intel-row"><b>${escapeHtml(item.name)}</b><span>${item.count}</span></div>`).join('') : '<div class="events-empty">No layer signal</div>'}</div>
+      </div>
+    </div>
+    <div class="continuity-block" style="margin-bottom:12px">
+      <h4>Key memories</h4>
+      ${memories.length ? memories.map(m => `<div class="brief-memory"><div>${escapeHtml(m.content)}</div><div class="meta"><span>${escapeHtml(m.layer)}</span><span>${escapeHtml(m.memory_type || 'memory')}</span><span>imp ${Number(m.importance || 0).toFixed(2)}</span></div></div>`).join('') : '<div class="events-empty">No memories found</div>'}
+    </div>
+    <div class="continuity-block">
+      <h4>Suggested pulls</h4>
+      <div class="followups">${followups.length ? followups.map(item => `<span class="followup-chip">${escapeHtml(item)}</span>`).join('') : '<span class="events-empty">No follow-up suggestions</span>'}</div>
+    </div>
+  `;
+}
+
+async function loadQueryCompare() {
+  const q1 = document.getElementById('compare-query-a').value.trim();
+  const q2 = document.getElementById('compare-query-b').value.trim();
+  const el = document.getElementById('compare-results');
+  if (!q1 || !q2) {
+    el.innerHTML = '<div class="empty">Enter two queries to compare.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="empty">Comparing retrieval paths...</div>';
+  const data = await fetchJSON(`/api/intelligence/compare?q1=${encodeURIComponent(q1)}&q2=${encodeURIComponent(q2)}&top_k=8`);
+  const renderLane = (title, lane, accent) => `
+    <div class="continuity-block" style="border-color:${accent}">
+      <h4>${escapeHtml(title)}</h4>
+      <div class="intel-list" style="margin-bottom:10px">
+        <div class="intel-row"><b>memories</b><span>${lane.memory_count || 0}</span></div>
+        <div class="intel-row"><b>entities</b><span>${lane.entity_count || 0}</span></div>
+      </div>
+      <div class="intel-list">
+        ${(lane.entities || []).slice(0, 4).map(item => `<div class="intel-row"><b>${escapeHtml(item.name)}</b><span>${item.count}</span></div>`).join('') || '<div class="events-empty">No entity signal</div>'}
+      </div>
+    </div>
+  `;
+  el.innerHTML = `
+    <div class="compare-columns" style="margin-bottom:12px">
+      ${renderLane('Overlap', data.overlap || {}, 'rgba(52,211,153,0.28)')}
+      ${renderLane('Only A', data.only_a || {}, 'rgba(34,211,238,0.28)')}
+      ${renderLane('Only B', data.only_b || {}, 'rgba(251,191,36,0.28)')}
+    </div>
+    <div class="compare-columns">
+      <div class="continuity-block">
+        <h4>Shared memories</h4>
+        ${((data.overlap || {}).memories || []).map(m => `<div class="brief-memory">${escapeHtml(m.content)}</div>`).join('') || '<div class="events-empty">No shared memories</div>'}
+      </div>
+      <div class="continuity-block">
+        <h4>Only A memories</h4>
+        ${((data.only_a || {}).memories || []).map(m => `<div class="brief-memory">${escapeHtml(m.content)}</div>`).join('') || '<div class="events-empty">No unique A memories</div>'}
+      </div>
+      <div class="continuity-block">
+        <h4>Only B memories</h4>
+        ${((data.only_b || {}).memories || []).map(m => `<div class="brief-memory">${escapeHtml(m.content)}</div>`).join('') || '<div class="events-empty">No unique B memories</div>'}
+      </div>
+    </div>
+  `;
+}
+
+async function loadHotspots() {
+  const hours = document.getElementById('hotspots-hours').value;
+  const el = document.getElementById('hotspots-results');
+  el.innerHTML = '<div class="empty">Loading hotspots...</div>';
+  const data = await fetchJSON(`/api/intelligence/hotspots?hours=${encodeURIComponent(hours)}&limit=8`);
+  const section = (title, rows) => `
+    <div class="continuity-block">
+      <h4>${escapeHtml(title)}</h4>
+      <div class="intel-list">
+        ${rows.length ? rows.map(item => `<div class="intel-row"><b>${escapeHtml(item.name || item.bucket || 'item')}</b><span>${item.count ?? ''}</span></div>`).join('') : '<div class="events-empty">No signal</div>'}
+      </div>
+    </div>
+  `;
+  el.innerHTML = `
+    ${section('Hot entities', data.hot_entities || [])}
+    ${section('Hot layers', data.hot_layers || [])}
+    ${section('Hot sources', data.hot_sources || [])}
+    <div class="continuity-block">
+      <h4>Hot memories</h4>
+      ${(data.hot_memories || []).length ? data.hot_memories.map(item => `<div class="brief-memory"><div>${escapeHtml(item.content)}</div><div class="meta"><span>${escapeHtml(item.layer)}</span><span>imp ${Number(item.importance || 0).toFixed(2)}</span></div></div>`).join('') : '<div class="events-empty">No hot memories yet</div>'}
+    </div>
+  `;
+}
+
+function formatRelativeTime(ts) {
+  if (!ts) return 'unknown';
+  const delta = Math.max(0, Math.round(Date.now() / 1000 - ts));
+  if (delta < 60) return `${delta}s ago`;
+  if (delta < 3600) return `${Math.floor(delta / 60)}m ago`;
+  if (delta < 86400) return `${Math.floor(delta / 3600)}h ago`;
+  return `${Math.floor(delta / 86400)}d ago`;
+}
+
+function continuityList(items = []) {
+  if (!items.length) return '<div class="empty">No saved handoffs yet</div>';
+  return items.map(item => {
+    const meta = item.metadata || {};
+    const loops = meta.open_loops || [];
+    const entities = meta.touched_entities || [];
+    const queries = meta.suggested_queries || meta.recent_queries || [];
+    const decisions = meta.decisions || [];
+    return `<div class="continuity-card shell-card">
+      <div class="continuity-meta">
+        <span>${escapeHtml(item.session_id || 'session')}</span>
+        <span>updated ${formatRelativeTime(item.updated_at)}</span>
+      </div>
+      <h3>${escapeHtml(meta.summary || item.summary || 'Session handoff')}</h3>
+      <div class="continuity-summary">${escapeHtml(meta.summary || item.summary || 'No summary available.')}</div>
+      <div class="continuity-grid">
+        <div class="continuity-block">
+          <h4>Open loops</h4>
+          <ul>${(loops.length ? loops : ['No active open loops']).slice(0, 5).map(loop => `<li>${escapeHtml(loop)}</li>`).join('')}</ul>
+        </div>
+        <div class="continuity-block">
+          <h4>Touched entities</h4>
+          <ul>${(entities.length ? entities : ['No touched entities recorded']).slice(0, 6).map(entity => `<li>${escapeHtml(entity)}</li>`).join('')}</ul>
+        </div>
+        <div class="continuity-block">
+          <h4>Suggested queries</h4>
+          <ul>${(queries.length ? queries : ['No suggested resume queries']).slice(0, 6).map(query => `<li>${escapeHtml(query)}</li>`).join('')}</ul>
+        </div>
+        <div class="continuity-block">
+          <h4>Decisions</h4>
+          <ul>${(decisions.length ? decisions.map(d => d.content || d.summary || JSON.stringify(d)) : ['No recent decisions']).slice(0, 4).map(decision => `<li>${escapeHtml(decision)}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadContinuity() {
+  const data = await fetchJSON('/api/session-handoffs?limit=12');
+  document.getElementById('continuity-list').innerHTML = continuityList(data.handoffs || []);
+}
+
+// --- Hint cards ---
+function hintCard(h) {
+  const snippet = h.snippet || h.content || '';
+  const entities = h.entities || [];
+  const layer = h.layer || 'episodic';
+  const id = h.id || h.memory_id || '';
+  return `<div class="hint-card" id="hint-${id}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <span class="tag ${layer}">${layer}</span>
+      <button style="font-size:10px;padding:3px 8px;background:var(--pink);color:#180d13;font-weight:700;border:none;border-radius:2px" onclick="revealHint('${id}')">Reveal</button>
+    </div>
+    <div style="font-size:11px;color:var(--text);line-height:1.4">${escapeHtml(snippet)}</div>
+    ${entities.length ? '<div class="hint-entities">' + entities.map(e => `<span class="entity-pill">${escapeHtml(e)}</span>`).join('') + '</div>' : ''}
+  </div>`;
+}
+
+async function revealHint(id) {
+  if (!id) return;
+  const data = await fetchJSON(`/api/memories/${id}`);
+  const hintEl = document.getElementById('hint-' + id);
+  if (hintEl && data) {
+    hintEl.outerHTML = memoryCard(data);
+  }
+}
+
+// --- Remember tabs ---
+function switchRememberTab(tab, el) {
+  document.querySelectorAll('[id^="rtab-"]').forEach(t => t.style.display = 'none');
+  document.getElementById('rtab-' + tab).style.display = 'block';
+  el.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+async function doRemember() {
+  const content = document.getElementById('remember-content').value;
+  if (!content) return;
+  const layer = document.getElementById('remember-layer').value;
+  const importance = parseFloat(document.getElementById('remember-importance').value);
+  const data = await postJSON('/api/remember', {content, layer, importance});
+  let resultHtml = `<div style="color:var(--green)">Stored: ${data.id}`;
+  if (data.surprise !== undefined) {
+    resultHtml += ` | Surprise: ${(data.surprise || 0).toFixed(3)}`;
+  }
+  if (data.importance !== undefined) {
+    resultHtml += ` | Importance: ${(data.importance || importance).toFixed(3)}`;
+  }
+  resultHtml += '</div>';
+  if (data.warning) {
+    resultHtml += `<div style="color:var(--yellow);font-size:11px;margin-top:4px">${escapeHtml(data.warning)}</div>`;
+  }
+  if (data.is_duplicate) {
+    resultHtml += `<div style="color:var(--yellow);font-size:11px;margin-top:4px">Near-duplicate detected</div>`;
+  }
+  document.getElementById('remember-result').innerHTML = resultHtml;
+  document.getElementById('remember-content').value = '';
+}
+async function doRememberDecision() {
+  const decision = document.getElementById('decision-text').value;
+  const rationale = document.getElementById('decision-rationale').value;
+  if (!decision) return;
+  const content = `Decision: ${decision}\nRationale: ${rationale}`;
+  const data = await postJSON('/api/remember', {content, layer:'procedural', importance:0.8, source_type:'remember:ai'});
+  document.getElementById('remember-result').innerHTML = `<div style="color:var(--green)">Decision stored: ${data.id}</div>`;
+  document.getElementById('decision-text').value = '';
+  document.getElementById('decision-rationale').value = '';
+}
+async function doRememberError() {
+  const error = document.getElementById('error-text').value;
+  const prevention = document.getElementById('error-prevention').value;
+  if (!error) return;
+  const content = `Error: ${error}\nPrevention: ${prevention}`;
+  const data = await postJSON('/api/remember', {content, layer:'procedural', importance:0.7, source_type:'remember:ai'});
+  document.getElementById('remember-result').innerHTML = `<div style="color:var(--green)">Error pattern stored: ${data.id}</div>`;
+  document.getElementById('error-text').value = '';
+  document.getElementById('error-prevention').value = '';
+}
+async function doRememberInteraction() {
+  const q = document.getElementById('interaction-q').value;
+  const a = document.getElementById('interaction-a').value;
+  if (!q || !a) return;
+  const content = `Q: ${q}\nA: ${a}`;
+  const data = await postJSON('/api/remember', {content, layer:'episodic', importance:0.5, source_type:'interaction'});
+  document.getElementById('remember-result').innerHTML = `<div style="color:var(--green)">Interaction stored: ${data.id}</div>`;
+  document.getElementById('interaction-q').value = '';
+  document.getElementById('interaction-a').value = '';
+}
+
+// --- Consolidation ---
+async function runConsolidate() {
+  const el = document.getElementById('consolidate-result');
+  el.textContent = 'Running dream cycle...';
+  const data = await postJSON('/api/consolidate', {});
+  el.innerHTML = `clusters: ${data.clusters_found} | merged: ${data.memories_merged} | cards: ${data.peer_cards_generated} | forgot: ${data.forgotten} | promoted: ${data.promoted}`;
+  loadStats();
+}
+
+// --- Analytics ---
+async function loadAnalytics() {
+  const data = await fetchJSON('/api/analytics');
+
+  // donut chart
+  const canvas = document.getElementById('donut-canvas');
+  const ctx = canvas.getContext('2d');
+  const layers = data.layer_distribution || [];
+  const colors = {working:'#ed83b6',episodic:'#7bbcff',semantic:'#8fd4b1',procedural:'#ab94ff'};
+  const total = layers.reduce((s,l) => s + l.cnt, 0) || 1;
+  let angle = -Math.PI/2;
+  ctx.clearRect(0,0,120,120);
+  for (const l of layers) {
+    const slice = (l.cnt/total) * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(60,60);
+    ctx.arc(60,60,55,angle,angle+slice);
+    ctx.fillStyle = colors[l.layer] || '#ab94ff';
+    ctx.fill(); angle += slice;
+  }
+  ctx.beginPath(); ctx.arc(60,60,30,0,Math.PI*2);
+  ctx.fillStyle = '#09090a'; ctx.fill();
+  // legend
+  document.getElementById('donut-legend').innerHTML = layers.map(l =>
+    `<div><span class="dot" style="background:${colors[l.layer]||'#ab94ff'}"></span>${l.layer}: ${l.cnt} (${(l.cnt/total*100).toFixed(0)}%)</div>`
+  ).join('');
+
+  // top accessed
+  const maxAcc = Math.max(...(data.top_accessed||[]).map(m=>m.access_count),1);
+  document.getElementById('top-accessed').innerHTML = (data.top_accessed||[]).map(m =>
+    `<div class="bar-row"><span class="bar-label" title="${escapeHtml(m.content)}">${escapeHtml(m.content.slice(0,40))}</span><div class="bar-fill" style="width:${m.access_count/maxAcc*200}px;background:var(--cyan)"></div><span class="bar-value">${m.access_count}</span></div>`
+  ).join('');
+
+  // top entities
+  const maxEnt = Math.max(...(data.top_entities||[]).map(e=>e.cnt),1);
+  document.getElementById('top-entities-chart').innerHTML = (data.top_entities||[]).slice(0,15).map(e =>
+    `<div class="bar-row"><span class="bar-label">${escapeHtml(e.canonical_name)}</span><div class="bar-fill" style="width:${e.cnt/maxEnt*200}px;background:${colors[e.entity_type]||'var(--accent)'}"></div><span class="bar-value">${e.cnt}</span></div>`
+  ).join('');
+
+  // source dist
+  document.getElementById('source-dist').innerHTML = (data.source_distribution||[]).map(s =>
+    `<div class="bar-row"><span class="bar-label">${s.source_type}</span><div class="bar-fill" style="width:${s.cnt/total*300}px;background:var(--accent2)"></div><span class="bar-value">${s.cnt}</span></div>`
+  ).join('');
+}
+
+// --- Context layers ---
+async function loadContext() {
+  const query = document.getElementById('context-query').value || null;
+  let url = '/api/context';
+  if (query) url += `?query=${encodeURIComponent(query)}`;
+  const data = await fetchJSON(url);
+  const names = {l0:'L0 — Identity',l1:'L1 — Core Knowledge',l2:'L2 — Recent & Procedural',l3:'L3 — Search Results'};
+  const colors = {l0:'var(--green)',l1:'var(--cyan)',l2:'var(--yellow)',l3:'var(--accent2)'};
+  document.getElementById('context-layers').innerHTML = Object.entries(data).map(([k,v]) =>
+    `<div class="context-layer">
+      <div class="cl-header"><span class="cl-name" style="color:${colors[k]||'var(--text)'}">${names[k]||k}</span><span class="cl-tokens">${v.tokens} tokens</span>
+        <button style="font-size:9px;padding:2px 6px" onclick="navigator.clipboard.writeText(this.closest('.context-layer').querySelector('.cl-text').textContent)">copy</button>
+      </div>
+      <div class="cl-text">${escapeHtml(v.text || '(empty)')}</div>
+    </div>`
+  ).join('');
+}
+
+// --- Ingest (real implementation) ---
+async function doIngest() {
+  const path = document.getElementById('ingest-path').value;
+  if (!path) return;
+  document.getElementById('ingest-status').innerHTML = '<span style="color:var(--yellow)">Ingesting...</span>';
+  try {
+    const data = await postJSON('/api/ingest/path', {path});
+    if (data.error) {
+      document.getElementById('ingest-status').innerHTML = `<span style="color:var(--red)">Error: ${escapeHtml(data.error)}</span>`;
+    } else {
+      const count = data.memories_created || data.count || 0;
+      document.getElementById('ingest-status').innerHTML = `<span style="color:var(--green)">Ingested: ${count} memories created</span>`;
+      toast(`Ingest complete: ${count} memories`, 'success');
+    }
+  } catch(e) { document.getElementById('ingest-status').innerHTML = `<span style="color:var(--red)">Error: ${e}</span>`; }
+  loadIngestLog();
+}
+async function doIngestSessions() {
+  document.getElementById('ingest-status').innerHTML = '<span style="color:var(--yellow)">Ingesting sessions...</span>';
+  try {
+    const data = await postJSON('/api/ingest/sessions', {});
+    const count = data.sessions_ingested || data.count || 0;
+    document.getElementById('ingest-status').innerHTML = `<span style="color:var(--green)">Sessions ingested: ${count}</span>`;
+    toast(`Sessions ingested: ${count}`, 'success');
+  } catch(e) {
+    document.getElementById('ingest-status').innerHTML = `<span style="color:var(--red)">Error: ${e}</span>`;
+  }
+  loadIngestLog();
+}
+async function loadIngestLog() {
+  try {
+    const data = await fetchJSON('/api/ingest/log');
+    document.getElementById('ingest-log').innerHTML = (data||[]).map(r => {
+      const t = new Date(r.last_ingested * 1000).toLocaleString();
+      const name = r.file_path.split('/').pop();
+      return `<div class="event-item"><span class="time">${t}</span> ${name} <span style="color:var(--cyan)">${r.memory_count} mems</span></div>`;
+    }).join('');
+  } catch(e) {}
+}
+
+// --- Diary ---
+async function writeDiary() {
+  const input = document.getElementById('diary-input');
+  const text = input.value.trim();
+  if (!text) return;
+  await postJSON('/api/diary', {entry: text});
+  input.value = '';
+  loadDiary();
+}
+async function loadDiary() {
+  const data = await fetchJSON('/api/diary');
+  const el = document.getElementById('diary-entries');
+  el.innerHTML = (data.entries||[]).reverse().map(e => {
+    const t = new Date(e.timestamp * 1000).toLocaleTimeString();
+    return `<div class="diary-entry"><span class="diary-time">${t}</span> ${escapeHtml(e.text)}</div>`;
+  }).join('');
+}
+
+// --- Entity editor (in inspector) ---
+async function inspectEntity(id) {
+  const data = await fetchJSON(`/api/entities/${id}/graph`);
+  const inspector = document.getElementById('inspector');
+  inspector.classList.add('open');
+  openActivity();
+  const entity = data.nodes && data.nodes[0];
+  let html = '<div>';
+  if (entity) {
+    html += `<div style="margin-bottom:8px"><b>${entity.name}</b> <span class="tag ${entity.type}">${entity.type}</span></div>`;
+    html += `<div style="margin-bottom:8px;display:flex;gap:4px">
+      <input type="text" id="alias-input" placeholder="Add alias..." style="flex:1;font-size:11px">
+      <button style="font-size:10px;padding:2px 8px" onclick="addAlias('${id}')">+</button>
+    </div>`;
+    html += `<div style="margin-bottom:8px"><select style="font-size:11px" onchange="changeEntityType('${id}',this.value)">
+      <option value="">change type...</option>
+      <option value="person">person</option><option value="tool">tool</option>
+      <option value="concept">concept</option><option value="project">project</option>
+    </select></div>`;
+  }
+  if (data.nodes && data.nodes.length > 1) {
+    html += '<b>Connected:</b><br>';
+    for (const n of data.nodes.slice(1)) html += `<span class="entity-node ${n.type}">${n.name}</span>`;
+  }
+  if (data.edges && data.edges.length) {
+    html += '<br><br><b>Relationships:</b><br>';
+    for (const e of data.edges)
+      html += `<div style="font-size:11px;padding:2px 0">${e.source_name} &rarr; ${e.relation_type} &rarr; ${e.target_name}</div>`;
+  }
+  html += '</div>';
+  document.getElementById('inspector-content').innerHTML = html;
+}
+async function addAlias(entityId) {
+  const alias = document.getElementById('alias-input').value.trim();
+  if (!alias) return;
+  await postJSON(`/api/entities/${entityId}/alias`, {alias});
+  document.getElementById('alias-input').value = '';
+  inspectEntity(entityId);
+}
+async function changeEntityType(entityId, type) {
+  if (!type) return;
+  await postJSON(`/api/entities/${entityId}/type`, {type});
+  inspectEntity(entityId);
+}
+
+// --- Pin ---
+async function togglePin(id, isPinned) {
+  const endpoint = isPinned ? 'unpin' : 'pin';
+  await postJSON(`/api/memories/${id}/${endpoint}`, {});
+  toast(isPinned ? 'Unpinned' : 'Pinned — will never be forgotten', 'success');
+}
+
+// --- Similar memories ---
+async function showSimilar(id) {
+  const data = await fetchJSON(`/api/memories/${id}/similar?top_k=5`);
+  const inspector = document.getElementById('inspector');
+  inspector.classList.add('open');
+  openActivity();
+  let html = '<div><b>Similar Memories:</b><br><br>';
+  if (!data.length) { html += '<span style="color:var(--text2)">No similar memories found</span>'; }
+  for (const m of data) {
+    html += `<div class="memory-card" onclick="inspectMemory('${m.id}')" style="margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span class="tag ${m.layer}">${m.layer}</span>
+        <span style="font-size:10px;color:var(--cyan)">${(m.similarity*100).toFixed(1)}% similar</span>
+      </div>
+      <div style="font-size:11px;line-height:1.4">${escapeHtml((m.content||'').slice(0,150))}</div>
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('inspector-content').innerHTML = html;
+}
+
+// --- Importance explainer ---
+async function showImportance(id) {
+  const [data, histData] = await Promise.all([
+    fetchJSON(`/api/memories/${id}/importance`),
+    fetchJSON(`/api/memories/${id}/history`),
+  ]);
+  const inspector = document.getElementById('inspector');
+  inspector.classList.add('open');
+  openActivity();
+  let html = `<div><b>Importance: ${data.composite}</b><br><br>`;
+
+  // decay sparkline if history exists
+  const history = histData.history || [];
+  if (history.length > 1) {
+    const w = 200, h = 40;
+    const maxS = Math.max(...history.map(p => p.score), 0.01);
+    const minS = Math.min(...history.map(p => p.score));
+    const range = Math.max(maxS - minS, 0.01);
+    let path = '';
+    history.forEach((p, i) => {
+      const x = (i / (history.length - 1)) * w;
+      const y = h - ((p.score - minS) / range) * h;
+      path += (i === 0 ? `M${x},${y}` : ` L${x},${y}`);
+    });
+    html += `<div style="margin-bottom:12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:4px">Importance over time (${history.length} snapshots)</div>
+      <svg width="${w}" height="${h}" style="background:var(--bg);border-radius:4px;padding:4px">
+        <polyline points="${path.replace(/[ML]/g, (m) => m === 'M' ? '' : ' ').trim()}" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="${w}" cy="${h - ((history[history.length-1].score - minS) / range) * h}" r="2.5" fill="var(--cyan)"/>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2)">
+        <span>${new Date(history[0].recorded_at * 1000).toLocaleDateString()}</span>
+        <span>${new Date(history[history.length-1].recorded_at * 1000).toLocaleDateString()}</span>
+      </div>
+    </div>`;
+  }
+
+  for (const f of data.factors) {
+    const pct = (f.value * 100).toFixed(0);
+    const weighted = (f.value * f.weight * 100).toFixed(1);
+    html += `<div class="imp-bar">
+      <span class="imp-label">${f.name}</span>
+      <div class="imp-fill-bg"><div class="imp-fill" style="width:${pct}%;background:${f.color}"></div></div>
+      <span class="imp-val">${pct}% x${f.weight}</span>
+    </div>`;
+    if (f.detail) html += `<div style="margin-left:78px;font-size:9px;color:var(--text2);margin-top:-4px;margin-bottom:4px">${f.detail}</div>`;
+  }
+  html += '</div>';
+  document.getElementById('inspector-content').innerHTML = html;
+}
+
+// --- Health dashboard ---
+async function loadHealth() {
+  // fetch all data in parallel
+  const [data, map, pulse, drift, reranker] = await Promise.all([
+    fetchJSON('/api/health'),
+    fetchJSON('/api/memory-map'),
+    fetchJSON('/api/pulse'),
+    fetchJSON('/api/drift').catch(() => null),
+    fetchJSON('/api/reranker/status').catch(() => null),
+  ]);
+
+  // --- Top stats grid ---
+  const mems = data.memories || {};
+  const layerColors = {working:'var(--yellow)',episodic:'var(--cyan)',semantic:'var(--green)',procedural:'var(--accent2)',codebase:'var(--accent)'};
+  const cards = [
+    {label:'Total Memories', value: mems.total||0, status: mems.total > 0 ? 'ok' : 'warn'},
+    {label:'Episodic', value: mems.episodic||0, status: 'ok'},
+    {label:'Semantic', value: mems.semantic||0, status: 'ok'},
+    {label:'Procedural', value: mems.procedural||0, status: 'ok'},
+    {label:'Codebase', value: mems.codebase||0, status: 'ok'},
+    {label:'Working', value: mems.working||0, status: (mems.working||0) === 0 ? 'ok' : 'warn'},
+    {label:'Entities', value: data.entities||0, status: 'ok'},
+    {label:'Relationships', value: data.relationships||0, status: 'ok'},
+    {label:'DB Size', value: (data.db_size_mb||0).toFixed(1)+'MB', status: data.db_size_mb < 100 ? 'ok' : 'warn'},
+  ];
+  document.getElementById('health-grid').innerHTML = cards.map(c =>
+    `<div class="health-card ${c.status}"><div class="hc-value">${c.value}</div><div class="hc-label">${c.label}</div></div>`
+  ).join('');
+
+  // --- Drift score ---
+  const driftEl = document.getElementById('health-drift');
+  if (drift && !drift.claims_verified) {
+    driftEl.innerHTML = '<div class="events-empty">No code claims have been verified. Open Drift to run a check.</div>';
+  } else if (drift) {
+    const ds = drift.score ?? 0;
+    const dc = ds >= 80 ? 'var(--green)' : ds >= 50 ? 'var(--yellow)' : 'var(--red)';
+    const errors = (drift.issues||[]).filter(i => i.severity==='error').length;
+    const warns = (drift.issues||[]).filter(i => i.severity==='warning').length;
+    const pct = Math.max(0, Math.min(100, ds));
+    driftEl.innerHTML = `
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
+        <div style="font-size:36px;font-weight:700;color:${dc}">${ds}</div>
+        <div style="flex:1">
+          <div style="background:var(--bg3);border-radius:4px;height:8px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${dc};border-radius:4px;transition:width 0.5s"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--text2)">
+            <span>${drift.claims_valid||0}/${drift.claims_verified||0} claims valid</span>
+            <span>${errors} errors, ${warns} warnings</span>
+          </div>
+        </div>
+        <a href="#" onclick="showView('drift');return false" style="font-size:10px;color:var(--accent)">details →</a>
+      </div>`;
+  } else {
+    driftEl.innerHTML = '<div style="font-size:11px;color:var(--text2)">Drift check unavailable</div>';
+  }
+
+  // --- Memory map with bars ---
+  const layers = map.layers || {};
+  const totalMems = mems.total || 1;
+  let mapHtml = `<div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:11px;color:var(--text2)">
+    <span>Date range: ${map.oldest||'—'} → ${map.newest||'—'}</span>
+    <span>Last hour: ${map.last_hour?.writes||0} writes, ${map.last_hour?.reads||0} reads</span>
+  </div>`;
+
+  for (const [layer, info] of Object.entries(layers)) {
+    if (layer === 'working' && info.count === 0) continue;
+    const color = layerColors[layer] || 'var(--text)';
+    const barPct = Math.max(2, (info.count / totalMems) * 100);
+    mapHtml += `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+        <span style="color:${color};font-weight:600;font-size:12px">${layer}</span>
+        <span style="font-size:20px;font-weight:700;color:${color}">${info.count}</span>
+      </div>
+      <div style="background:var(--bg3);border-radius:3px;height:6px;overflow:hidden;margin-bottom:6px">
+        <div style="width:${barPct}%;height:100%;background:${color};border-radius:3px"></div>
+      </div>`;
+    if (info.top_entities && info.top_entities.length) {
+      mapHtml += '<div style="display:flex;gap:4px;flex-wrap:wrap">';
+      for (const e of info.top_entities) {
+        mapHtml += `<span class="entity-node" style="font-size:10px;cursor:pointer" onclick="inspectEntity('${e.id||''}')">${escapeHtml(e.canonical_name)} <span style="color:var(--text2)">${e.cnt}</span></span>`;
+      }
+      mapHtml += '</div>';
+    } else if (info.count > 0) {
+      mapHtml += '<div style="font-size:10px;color:var(--text2);font-style:italic">no entity tags</div>';
+    }
+    mapHtml += '</div>';
+  }
+  document.getElementById('memory-map-content').innerHTML = mapHtml;
+
+  // --- Activity pulse ---
+  const pulseEl = document.getElementById('health-pulse');
+  const sparkline = pulse.sparkline || [];
+  const maxSpark = Math.max(1, ...sparkline);
+  const barW = Math.max(4, Math.floor(300 / Math.max(1, sparkline.length)));
+  let pulseHtml = `<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    <span class="tag" style="color:var(--green)">created: ${pulse.created||0}</span>
+    <span class="tag" style="color:var(--cyan)">recalled: ${pulse.recalled||0}</span>
+    <span class="tag" style="color:var(--accent2)">promoted: ${pulse.promoted||0}</span>
+    <span class="tag" style="color:var(--red)">forgotten: ${pulse.forgotten||0}</span>
+    <span class="tag" style="color:var(--text2)">total: ${pulse.total_events||0}</span>
+  </div>`;
+  if (sparkline.length > 0) {
+    pulseHtml += '<div style="display:flex;align-items:end;gap:1px;height:40px">';
+    for (const v of sparkline) {
+      const h = Math.max(1, (v / maxSpark) * 38);
+      const opacity = v === 0 ? 0.15 : 0.4 + (v / maxSpark) * 0.6;
+      pulseHtml += `<div style="width:${barW}px;height:${h}px;background:var(--accent);opacity:${opacity};border-radius:1px" title="${v} events"></div>`;
+    }
+    pulseHtml += '</div>';
+    pulseHtml += '<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2);margin-top:2px"><span>24h ago</span><span>now</span></div>';
+  }
+  pulseEl.innerHTML = pulseHtml;
+
+  // --- Subsystems ---
+  const subCards = [
+    {label:'Embedding Cache', value: data.embedding_cache_loaded ? 'loaded' : 'cold', status: data.embedding_cache_loaded ? 'ok' : 'warn'},
+    {label:'Cache Vectors', value: data.embedding_cache_size||0, status: data.embedding_cache_size > 0 ? 'ok' : 'warn'},
+    {label:'FTS Indexed', value: data.fts_indexed||0, status: data.fts_indexed > 0 ? 'ok' : 'warn'},
+    {label:'No Embedding', value: data.no_embedding||0, status: (data.no_embedding||0) === 0 ? 'ok' : 'bad'},
+    {label:'Orphaned Entities', value: data.orphaned_entities||0, status: (data.orphaned_entities||0) === 0 ? 'ok' : 'warn'},
+    {label:'Stale Working', value: data.stale_working||0, status: (data.stale_working||0) === 0 ? 'ok' : 'warn'},
+    {label:'Deep Reranker', value: reranker?.trained ? 'trained' : 'untrained', status: reranker?.trained ? 'ok' : 'warn'},
+    {label:'Reranker Size', value: reranker?.model_size_kb ? reranker.model_size_kb+'KB' : '—', status: 'ok'},
+  ];
+  document.getElementById('health-subsystems').innerHTML = subCards.map(c =>
+    `<div class="health-card ${c.status}"><div class="hc-value">${c.value}</div><div class="hc-label">${c.label}</div></div>`
+  ).join('');
+}
+
+// --- Dedup viewer ---
+async function loadDuplicates() {
+  const threshold = document.getElementById('dedup-threshold').value;
+  const data = await fetchJSON(`/api/duplicates?threshold=${threshold}&limit=20`);
+  const el = document.getElementById('dedup-results');
+  if (!data.length) { el.innerHTML = '<div class="empty">No duplicates found at this threshold</div>'; return; }
+  el.innerHTML = `<div style="margin-bottom:8px;font-size:11px;color:var(--text2)">${data.length} duplicate pairs found</div>` +
+    data.map(d => `<div style="background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="color:var(--cyan);font-size:11px">${(d.similarity*100).toFixed(1)}% similar</span>
+        <span class="tag ${d.memory_1.layer}">${d.memory_1.layer}</span>
+      </div>
+      <div style="font-size:11px;margin-bottom:6px;padding:8px;background:var(--bg);border:1px solid var(--line);border-radius:2px">${escapeHtml((d.memory_1.content||'').slice(0,120))}</div>
+      <div style="font-size:11px;padding:8px;background:var(--bg);border:1px solid var(--line);border-radius:2px">${escapeHtml((d.memory_2.content||'').slice(0,120))}</div>
+    </div>`).join('');
+}
+async function runDedup() {
+  toast('Running dedup...', 'info');
+  const data = await postJSON('/api/dedup', {});
+  toast(`Dedup: found ${data.found}, merged ${data.merged}`, 'success');
+  loadDuplicates();
+  loadStats();
+}
+
+// --- Cognition: Surprise ---
+let lastSurprise = null;
+async function checkSurprise() {
+  const text = document.getElementById('surprise-text').value;
+  if (!text) return;
+  try {
+    const data = await postJSON('/api/surprise/preview', {content: text});
+    // draw gauge
+    lastSurprise = data.surprise ?? null;
+    drawSurpriseGauge(lastSurprise);
+    // show result
+    const el = document.getElementById('surprise-result');
+    const s = data.surprise || 0;
+    const color = s > 0.7 ? 'var(--green)' : s > 0.3 ? 'var(--yellow)' : 'var(--red)';
+    let html = `<div style="margin-bottom:6px"><b>Surprise:</b> <span style="color:${color};font-size:16px;font-weight:700">${s.toFixed(3)}</span></div>`;
+    if (data.nearest_distance !== undefined) {
+      html += `<div style="margin-bottom:4px"><b>Nearest distance:</b> ${data.nearest_distance.toFixed(4)}</div>`;
+    }
+    if (data.is_duplicate) {
+      html += `<div style="color:var(--yellow);margin-bottom:4px;font-weight:600">Near-duplicate detected</div>`;
+    }
+    if (data.nearest_content) {
+      html += `<div style="margin-top:6px;padding:6px;background:var(--bg);border-radius:4px;font-size:10px;line-height:1.4"><b>Nearest:</b> ${escapeHtml((data.nearest_content || '').slice(0,200))}</div>`;
+    }
+    el.innerHTML = html;
+  } catch(e) {
+    toast('Surprise check failed: ' + e, 'error');
+  }
+}
+
+function drawSurpriseGauge(value) {
+  const canvas = document.getElementById('surprise-gauge');
+  const ctx = canvas.getContext('2d');
+  const w = 200, h = 200;
+  const cx = w / 2, cy = h / 2;
+  const radius = 75;
+  ctx.clearRect(0, 0, w, h);
+
+  // background arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.strokeStyle = '#292427';
+  ctx.lineWidth = 12;
+  ctx.stroke();
+
+  if (value === null) {
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#928b89';
+    ctx.font = '28px ' + getComputedStyle(document.body).fontFamily;
+    ctx.fillText('—', cx, cy);
+    ctx.font = '10px ' + getComputedStyle(document.body).fontFamily;
+    ctx.fillText('NOT CHECKED', cx, cy + 24);
+    return;
+  }
+
+  // value arc (mint=novel, red=duplicate)
+  const endAngle = -Math.PI / 2 + value * Math.PI * 2;
+  const r = Math.round(240 * (1 - value) + 143 * value);
+  const g = Math.round(125 * (1 - value) + 212 * value);
+  const b = Math.round(135 * (1 - value) + 177 * value);
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, -Math.PI / 2, endAngle);
+  ctx.strokeStyle = `rgb(${r},${g},${b})`;
+  ctx.lineWidth = 12;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // center text
+  ctx.font = 'bold 28px ' + getComputedStyle(document.body).fontFamily;
+  ctx.fillStyle = `rgb(${r},${g},${b})`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(value.toFixed(2), cx, cy - 6);
+
+  ctx.font = '10px ' + getComputedStyle(document.body).fontFamily;
+  ctx.fillStyle = '#928b89';
+  ctx.fillText(value > 0.7 ? 'NOVEL' : value > 0.3 ? 'MODERATE' : 'DUPLICATE', cx, cy + 18);
+}
+
+// --- Cognition: Retention curves ---
+function drawRetentionCurves() {
+  const canvas = document.getElementById('retention-chart');
+  const ctx = canvas.getContext('2d');
+  const w = 600, h = 300;
+  const pad = { left: 50, right: 20, top: 20, bottom: 40 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  const halfLife = parseFloat(document.getElementById('ret-halflife').value);
+  const delta = parseFloat(document.getElementById('ret-huber-delta').value);
+  const l1Ratio = parseFloat(document.getElementById('ret-l1-ratio').value);
+  const maxDays = halfLife * 4;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // grid
+  ctx.strokeStyle = '#292427';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + (plotH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
+    ctx.font = '10px ' + getComputedStyle(document.body).fontFamily;
+    ctx.fillStyle = '#928b89';
+    ctx.textAlign = 'right';
+    ctx.fillText((1 - i * 0.25).toFixed(2), pad.left - 6, y + 3);
+  }
+  for (let d = 0; d <= maxDays; d += Math.max(1, Math.floor(maxDays / 6))) {
+    const x = pad.left + (d / maxDays) * plotW;
+    ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, h - pad.bottom); ctx.stroke();
+    ctx.textAlign = 'center';
+    ctx.fillText(d + 'd', x, h - pad.bottom + 15);
+  }
+
+  // L2 curve
+  function drawCurve(fn, color, label) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    for (let i = 0; i <= plotW; i++) {
+      const day = (i / plotW) * maxDays;
+      const val = Math.max(0, Math.min(1, fn(day)));
+      const x = pad.left + i;
+      const y = pad.top + (1 - val) * plotH;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // label at end
+    const endVal = Math.max(0, fn(maxDays));
+    const endY = pad.top + (1 - endVal) * plotH;
+    ctx.font = '10px ' + getComputedStyle(document.body).fontFamily;
+    ctx.fillStyle = color;
+    ctx.textAlign = 'left';
+    ctx.fillText(label, w - pad.right + 4, endY + 3);
+  }
+
+  // L2: pure exponential
+  const l2Fn = (day) => Math.exp(-0.693 * day / halfLife);
+
+  // Huber: transition at delta
+  const huberFn = (day) => {
+    const t = day / halfLife;
+    if (t <= delta) {
+      return Math.exp(-0.693 * day / halfLife);
+    } else {
+      const transitionVal = Math.exp(-0.693 * delta);
+      const slope = 0.693 * transitionVal / halfLife;
+      return Math.max(0, transitionVal - slope * (day - delta * halfLife));
+    }
+  };
+
+  // Elastic net
+  const elasticFn = (day) => {
+    const l2Val = Math.exp(-0.693 * day / halfLife);
+    const l1Val = Math.max(0, 1 - day / (2 * halfLife));
+    return l1Ratio * l1Val + (1 - l1Ratio) * l2Val;
+  };
+
+  drawCurve(l2Fn, '#7bbcff', 'L2');
+  drawCurve(huberFn, '#ed83b6', 'Huber');
+  drawCurve(elasticFn, '#8fd4b1', 'Elastic');
+
+  // axis labels
+  ctx.font = '11px ' + getComputedStyle(document.body).fontFamily;
+  ctx.fillStyle = '#928b89';
+  ctx.textAlign = 'center';
+  ctx.fillText('Days', pad.left + plotW / 2, h - 5);
+  ctx.save();
+  ctx.translate(12, pad.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Retention', 0, 0);
+  ctx.restore();
+}
+
+function switchCognitionTab(tab, el) {
+  document.querySelectorAll('[id^="ctab-"]').forEach(t => t.style.display = 'none');
+  document.getElementById('ctab-' + tab).style.display = 'block';
+  // update tab active state within cognition view
+  const tabBar = el.parentElement;
+  tabBar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// --- Cognition: Reranker ---
+async function loadRerankerStatus() {
+  try {
+    const data = await fetchJSON('/api/reranker/status');
+    const el = document.getElementById('reranker-status');
+    const trained = data.trained || data.is_trained || false;
+    const modelPath = data.model_path || data.path || 'N/A';
+    el.innerHTML = `<div style="display:flex;gap:12px;align-items:center">
+      <div><b>Status:</b> <span style="color:${trained ? 'var(--green)' : 'var(--yellow)'}">${trained ? 'Trained' : 'Not trained'}</span></div>
+      <div style="font-size:11px;color:var(--text2)">Model: ${escapeHtml(modelPath)}</div>
+    </div>`;
+  } catch(e) {
+    document.getElementById('reranker-status').innerHTML = '<span style="color:var(--text2)">Could not load reranker status</span>';
+  }
+}
+
+async function trainReranker() {
+  const epochs = parseInt(document.getElementById('reranker-epochs').value) || 50;
+  const lr = parseFloat(document.getElementById('reranker-lr').value) || 0.01;
+  const el = document.getElementById('reranker-result');
+  el.innerHTML = '<span style="color:var(--yellow)">Training...</span>';
+  try {
+    const data = await postJSON('/api/reranker/train', {epochs, learning_rate: lr});
+    el.innerHTML = `<div class="cog-result"><b>Training complete</b><br>
+      ${data.message || ''}<br>
+      ${data.final_loss !== undefined ? 'Loss: ' + data.final_loss.toFixed(4) : ''}
+      ${data.samples !== undefined ? ' | Samples: ' + data.samples : ''}
+    </div>`;
+    toast('Reranker trained', 'success');
+    loadRerankerStatus();
+  } catch(e) {
+    el.innerHTML = `<span style="color:var(--red)">Training failed: ${e}</span>`;
+  }
+}
+
+// --- Bridges ---
+async function loadBridges() {
+  try {
+    const data = await fetchJSON('/api/bridges');
+    const el = document.getElementById('bridges-list');
+    const bridges = data.bridges || data || [];
+    if (!bridges.length) {
+      el.innerHTML = '<div class="empty">No cross-domain bridges yet. Run the dream cycle to discover connections.</div>';
+      return;
+    }
+    el.innerHTML = bridges.map(b => {
+      const content = b.content || '';
+      // try to parse entity names and connection/insight from content
+      const entityMatch = content.match(/Bridge:\s*(.+?)\s*↔\s*(.+?)(?:\n|$)/i) ||
+                         content.match(/(.+?)\s*↔\s*(.+?)(?:\n|$)/);
+      const entityA = (b.entity_a || (entityMatch && entityMatch[1]) || 'Entity A').trim();
+      const entityB = (b.entity_b || (entityMatch && entityMatch[2]) || 'Entity B').trim();
+      const similarity = b.similarity || b.score || 0;
+      const date = b.fact_date || b.created_at || '';
+
+      // parse out connection and insight text
+      const connectionMatch = content.match(/Connection:\s*(.+?)(?:\n|$)/i);
+      const insightMatch = content.match(/Insight:\s*(.+?)(?:\n|$)/i);
+      const connectionText = connectionMatch ? connectionMatch[1] : '';
+      const insightText = insightMatch ? insightMatch[1] : content.slice(0, 200);
+
+      return `<div class="bridge-card" style="border-left: 3px solid; border-image: linear-gradient(var(--cyan), var(--green)) 1;">
+        <div class="bridge-header">${escapeHtml(entityA)} ↔ ${escapeHtml(entityB)}</div>
+        ${connectionText ? `<div class="bridge-text"><b>Connection:</b> ${escapeHtml(connectionText)}</div>` : ''}
+        <div class="bridge-text">${escapeHtml(insightText)}</div>
+        <div class="bridge-meta">
+          ${similarity ? `<span class="tag" style="color:var(--cyan)">similarity: ${(similarity * 100).toFixed(1)}%</span>` : ''}
+          ${date ? `<span>${date}</span>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('bridges-list').innerHTML = '<div class="empty">Failed to load bridges</div>';
+  }
+}
+
+// --- Drift detection ---
+async function loadDrift() {
+  document.getElementById('drift-score').innerHTML = '<div class="empty">Running drift check...</div>';
+  document.getElementById('drift-stats').innerHTML = '';
+  document.getElementById('drift-issues').innerHTML = '';
+
+  let response;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  try {
+    response = await fetchAPI(API + '/api/drift', { signal: controller.signal });
+  } catch (e) {
+    clearTimeout(timeout);
+    const message = e && e.name === 'AbortError' ? 'Drift check timed out after 12s' : `Drift check failed: ${e}`;
+    document.getElementById('drift-score').innerHTML = `<div class="empty" style="color:var(--red)">${escapeHtml(message)}</div>`;
+    return;
+  }
+  clearTimeout(timeout);
+  const data = await response.json();
+  if (!response.ok || data.error) {
+    const message = data.error || `Drift check failed (${response.status})`;
+    document.getElementById('drift-score').innerHTML = `<div class="empty" style="color:var(--red)">${escapeHtml(message)}</div>`;
+    return;
+  }
+  const score = data.score || 0;
+  const color = score >= 80 ? 'var(--green)' : score >= 50 ? 'var(--yellow)' : 'var(--red)';
+
+  // score display
+  document.getElementById('drift-score').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px">
+      <div style="font-size:48px;font-weight:700;color:${color}">${score}</div>
+      <div>
+        <div style="font-size:14px;color:var(--text)">/ 100</div>
+        <div style="font-size:11px;color:var(--text2)">${data.summary || ''}</div>
+      </div>
+    </div>`;
+
+  // stats cards
+  const cards = [
+    {label:'Memories Checked', value: data.memories_checked||0, status:'ok'},
+    {label:'Claims Extracted', value: data.claims_extracted||0, status:'ok'},
+    {label:'Claims Valid', value: `${data.claims_valid||0}/${data.claims_verified||0}`, status: (data.claims_valid||0) >= (data.claims_verified||0)*0.8 ? 'ok' : 'warn'},
+    {label:'Stale Memories', value: data.stale_memories||0, status: (data.stale_memories||0) === 0 ? 'ok' : 'warn'},
+  ];
+  document.getElementById('drift-stats').innerHTML = cards.map(c =>
+    `<div class="health-card ${c.status}"><div class="hc-value">${c.value}</div><div class="hc-label">${c.label}</div></div>`
+  ).join('');
+
+  // issues list
+  const issues = data.issues || [];
+  if (!issues.length) {
+    document.getElementById('drift-issues').innerHTML = '<div class="empty" style="color:var(--green)">No drift issues found</div>';
+    return;
+  }
+
+  const grouped = {};
+  for (const i of issues) {
+    const key = i.memory_id;
+    if (!grouped[key]) grouped[key] = {preview: i.memory_preview, issues: [], severity: i.severity};
+    grouped[key].issues.push(i);
+    if (i.severity === 'error') grouped[key].severity = 'error';
+  }
+
+  const issueColors = {error: 'var(--red)', warning: 'var(--yellow)', info: 'var(--cyan)'};
+  document.getElementById('drift-issues').innerHTML =
+    `<div style="font-size:11px;color:var(--text2);margin-bottom:8px">${issues.length} issues across ${Object.keys(grouped).length} memories</div>` +
+    Object.entries(grouped).map(([mid, g]) =>
+      `<div style="background:var(--surface);border:1px solid var(--line);border-left:2px solid ${issueColors[g.severity]};border-radius:2px;padding:12px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">${escapeHtml(g.preview.slice(0,120))}...</div>
+        ${g.issues.map(i => `<div style="font-size:11px;margin-top:4px">
+          <span style="color:${issueColors[i.severity]};font-weight:600">${i.severity.toUpperCase()}</span>
+          <span style="color:var(--text2)">${i.code}</span>:
+          <span>${escapeHtml(i.claim)}</span>
+        </div>`).join('')}
+        <div style="margin-top:6px"><span class="tag" style="font-size:9px;cursor:pointer" onclick="navigator.clipboard.writeText('${mid}');toast('Copied ID','info')">${mid.slice(0,8)}...</span></div>
+      </div>`
+    ).join('');
+}
+
+async function runDriftFix(dryRun) {
+  const button = document.getElementById(dryRun ? 'drift-preview-btn' : 'drift-fix-btn');
+  const previousLabel = button ? button.textContent : '';
+  if (button) {
+    button.disabled = true;
+    button.textContent = dryRun ? 'Previewing…' : 'Fixing…';
+  }
+  const label = dryRun ? 'Previewing drift fix...' : 'Fixing drift issues...';
+  toast(label, 'info');
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    const response = await fetchAPI(API + '/api/drift/fix', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({dry_run: dryRun}),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    const data = await response.json();
+    if (!response.ok) {
+      toast(`Drift fix failed: ${data.error || response.statusText}`, 'error');
+      return;
+    }
+    if (data.error) {
+      toast(`Drift fix failed: ${data.error}`, 'error');
+      return;
+    }
+    if (!data.total_actions) {
+      toast('No drift issues to fix', 'info');
+      return;
+    }
+    const msg = dryRun
+      ? `Would fix ${data.total_actions} issues (${data.invalidated} invalidate, ${data.flagged_stale} flag, ${data.forgotten} forget)`
+      : `Fixed ${data.total_actions} issues (${data.invalidated} invalidated, ${data.flagged_stale} flagged, ${data.forgotten} forgotten)`;
+    toast(msg, dryRun ? 'info' : 'success');
+    if (!dryRun) loadDrift();
+  } catch (e) {
+    const timedOut = e && e.name === 'AbortError';
+    toast(timedOut ? 'Drift fix timed out after 15s' : `Drift fix failed: ${e}`, 'error');
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = previousLabel;
+    }
+  }
+}
+
+function previewDriftFix() {
+  runDriftFix(true);
+  return false;
+}
+
+function applyDriftFix() {
+  runDriftFix(false);
+  return false;
+}
+
+// --- Pattern extraction ---
+async function loadPatterns() {
+  const hours = document.getElementById('patterns-hours').value;
+  document.getElementById('patterns-list').innerHTML = '<div class="empty">Scanning for patterns...</div>';
+  const data = await fetchJSON(`/api/patterns?hours=${hours}`);
+  const patterns = data.patterns || [];
+
+  if (!patterns.length) {
+    document.getElementById('patterns-list').innerHTML = '<div class="empty">No patterns found in recent activity</div>';
+    return;
+  }
+
+  const catColors = {workflow:'var(--cyan)', gotcha:'var(--red)', decision:'var(--accent2)', integration:'var(--yellow)', debug:'var(--accent)'};
+  document.getElementById('patterns-list').innerHTML =
+    `<div style="font-size:11px;color:var(--text2);margin-bottom:8px">${patterns.length} patterns found, ${data.would_store} novel enough to store</div>` +
+    patterns.map(p => {
+      const color = catColors[p.category] || 'var(--text2)';
+      const noveltyColor = p.novelty >= 0.5 ? 'var(--green)' : p.novelty >= 0.25 ? 'var(--yellow)' : 'var(--red)';
+      return `<div style="background:var(--surface);border:1px solid var(--line);border-left:2px solid ${color};border-radius:2px;padding:12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:12px;font-weight:600">${escapeHtml(p.title.slice(0,80))}</span>
+          <span class="tag" style="color:${color}">${p.category}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:6px">${escapeHtml(p.content_preview.slice(0,200))}</div>
+        <div style="display:flex;gap:8px;font-size:10px">
+          <span style="color:${noveltyColor}">novelty: ${(p.novelty*100).toFixed(0)}%</span>
+          <span style="color:var(--text2)">sources: ${p.source_events}</span>
+          <span style="color:${p.should_store ? 'var(--green)' : 'var(--text2)'}">${p.should_store ? 'WILL STORE' : 'skip'}</span>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+async function extractPatterns() {
+  const hours = document.getElementById('patterns-hours').value;
+  toast('Extracting patterns...', 'info');
+  const data = await postJSON('/api/patterns/extract', {hours: parseFloat(hours)});
+  if (data.total_stored === 0) {
+    toast('No novel patterns to store', 'info');
+    return;
+  }
+  toast(`Stored ${data.total_stored} patterns, skipped ${data.total_skipped}`, 'success');
+  loadPatterns();
+}
+
+// --- Export ---
+function toggleExportForm() {
+  document.getElementById('export-form').classList.toggle('open');
+}
+
+async function doExport() {
+  const format = document.getElementById('export-format').value;
+  const layer = document.getElementById('export-layer').value;
+  let url = `/api/export?format=${format}`;
+  if (layer) url += `&layer=${layer}`;
+  try {
+    const response = await fetchAPI(url);
+    const blob = await response.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `engram-export.${format === 'json' ? 'json' : 'md'}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Export downloaded', 'success');
+  } catch(e) {
+    toast('Export failed: ' + e, 'error');
+  }
+}
+
+// --- Bulk actions ---
+let selectMode = false;
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  document.getElementById('main-content').classList.toggle('select-mode', selectMode);
+  if (!selectMode) {
+    // uncheck all
+    document.querySelectorAll('.select-cb').forEach(cb => cb.checked = false);
+    document.getElementById('bulk-bar').classList.remove('visible');
+  }
+}
+
+function updateBulkCount() {
+  const checked = document.querySelectorAll('.select-cb:checked');
+  const bar = document.getElementById('bulk-bar');
+  document.getElementById('bulk-count').textContent = checked.length + ' selected';
+  bar.classList.toggle('visible', checked.length > 0);
+}
+
+async function bulkAction(action) {
+  const ids = Array.from(document.querySelectorAll('.select-cb:checked')).map(cb => cb.dataset.id);
+  if (!ids.length) return;
+
+  if (action === 'forget') {
+    if (!confirm(`Forget ${ids.length} memories?`)) return;
+    try {
+      await postJSON('/api/memories/bulk', {action: 'forget', memory_ids: ids});
+      toast(`Forgot ${ids.length} memories`, 'success');
+    } catch(e) { toast('Bulk forget failed', 'error'); }
+  } else if (action === 'promote') {
+    const layer = document.getElementById('bulk-promote-layer').value;
+    if (!layer) { toast('Select a target layer', 'error'); return; }
+    try {
+      await postJSON('/api/memories/bulk', {action: 'promote', memory_ids: ids, layer});
+      toast(`Promoted ${ids.length} memories to ${layer}`, 'success');
+    } catch(e) { toast('Bulk promote failed', 'error'); }
+  }
+
+  toggleSelectMode();
+  // refresh current view
+  const currentView = document.querySelector('.view-panel:not([style*="display: none"]):not([style*="display:none"])');
+  if (currentView) {
+    const viewName = currentView.id.replace('view-', '');
+    showView(viewName);
+  }
+  loadStats();
+}
+
+// --- View switcher (updated) ---
+function showView(name) {
+  if (!document.getElementById('view-' + name)) return;
+  closeDrawers();
+  updateWorkspace(name);
+  if (location.hash !== '#' + name) history.pushState(null, '', '#' + name);
+  activeView = name;
+  document.querySelectorAll('[id^="view-"]').forEach(el => el.style.display = 'none');
+  document.getElementById('view-' + name).style.display = 'block';
+  // highlight the correct nav item by matching onclick content
+  document.querySelectorAll('.sidebar .nav-item').forEach(el => {
+    const onclick = el.getAttribute('onclick') || '';
+    if (onclick.includes(`'${name}'`)) {
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
+  });
+
+  if (name === 'neural') {
+    resizeCanvas();
+    if (!neuralLoaded) {
+      loadNeuralData().then(() => { neuralLoaded = true; }).catch(() => {});
+    }
+  }
+  if (name === 'dormant') loadDormant();
+  if (name === 'intelligence') loadHotspots();
+  if (name === 'memories') loadMemories();
+  if (name === 'continuity') loadContinuity();
+  if (name === 'entities') loadEntities();
+  if (name === 'analytics') loadAnalytics();
+  if (name === 'context') loadContext();
+  if (name === 'ingest') loadIngestLog();
+  if (name === 'health') loadHealth();
+  if (name === 'dedup') loadDuplicates();
+  if (name === 'heatmap') loadHeatmap();
+  if (name === 'cognition') { loadRerankerStatus(); drawRetentionCurves(); drawSurpriseGauge(lastSurprise); }
+  if (name === 'bridges') loadBridges();
+  if (name === 'patterns') loadPatterns();
+  if (initialBootComplete) restartPollers();
+}
+
+
+const workspaceViews = {
+memories:['Memories','Browse what you’ve saved. Open a memory to see its context.'],
+search:['Search','Find a memory, narrow the results, or inspect how it was retrieved.'],
+neural:['Connections','Explore the entities and relationships in your archive.'],
+continuity:['Continuity','Pick up earlier work from saved session handoffs.'],
+intelligence:['Intelligence','Build a focused brief or compare two retrieval paths.'],
+entities:['Entities','Inspect names, aliases, and the memories that connect them.'],
+timeline:['Timeline','Find memories within a date range.'],
+remember:['Remember','Save context that should be available in a later session.'],
+analytics:['Analytics','Understand what is stored and how it is used.'],
+heatmap:['Heatmap','See when memories have been accessed.'],
+context:['Context','Inspect the memory layers available for a session.'],
+health:['Health','Check storage, retrieval, and memory maintenance.'],
+dedup:['Duplicates','Review similar memories before consolidating them.'],
+cognition:['Cognition','Inspect retention, novelty, and reranking behavior.'],
+bridges:['Bridges','Explore connections between memory clusters.'],
+drift:['Drift','Review code references that may have changed.'],
+patterns:['Patterns','Find recurring approaches in recent sessions.'],
+ingest:['Ingest','Import files or sessions into your archive.'],
+dormant:['Dormant review','Review overlooked connections separately from ordinary recall.']
+};
+function updateWorkspace(name) {
+  const view=workspaceViews[name]; if(!view)return;
+  document.getElementById('workspace-title').textContent=view[0];
+  document.getElementById('workspace-description').textContent=view[1];
+  document.title=view[0]+' · engram';
+  document.querySelectorAll('.nav-item').forEach(el=>{const selected=(el.getAttribute('onclick')||'').includes("'"+name+"'");if(selected)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current')});
+  document.getElementById('main-content').scrollTop=0;
+}
+function closeDrawers(){document.querySelectorAll('.drawer-open').forEach(el=>el.classList.remove('drawer-open'));document.getElementById('drawer-backdrop').classList.remove('open');document.getElementById('menu-toggle').setAttribute('aria-expanded','false')}
+function toggleNavigation(){const open=!document.querySelector('.sidebar').classList.contains('drawer-open');closeDrawers();if(open){document.querySelector('.sidebar').classList.add('drawer-open');document.getElementById('drawer-backdrop').classList.add('open');document.getElementById('menu-toggle').setAttribute('aria-expanded','true')}}
+function openActivity(){closeDrawers();document.querySelector('.panel').classList.add('drawer-open');if(matchMedia('(max-width:1150px)').matches)document.getElementById('drawer-backdrop').classList.add('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawers()});
+function syncViewFromUrl(){const name=location.hash.slice(1)||'memories';if(name!==activeView&&document.getElementById('view-'+name))showView(name)}
+window.addEventListener('hashchange',syncViewFromUrl);
+window.addEventListener('popstate',syncViewFromUrl);
+window.addEventListener('unhandledrejection',e=>{toast(e.reason?.message || 'Could not load this view. Try again.','error');e.preventDefault()});
+let dormantEvents = [];
+async function loadDormant(){
+ const data=await fetchJSON('/api/dormant');
+ dormantEvents=data.events;
+ document.getElementById('dormant-mode').textContent=data.mode==='shadow'?'Shadow mode: these connections were considered separately from recall. Opening one records exposure; only your explicit feedback records usefulness.':'Dormant recall is off. Retained evaluations can still be reviewed here.';
+ const el=document.getElementById('dormant-results');
+ el.innerHTML=data.events.map(row=>`<article class="dormant-row"><div><time>${escapeHtml(new Date(row.created_at*1000).toLocaleString())}</time><h3>${row.memory_id?'Connection available':'No suggestion'}</h3><p>${row.memory_id?'A candidate passed the relevance and dormancy checks.':'This evaluation did not select a qualifying memory.'}${row.feedback?' · Feedback: '+escapeHtml(row.feedback):''}</p></div>${row.memory_id?`<button class="secondary" onclick="inspectDormant('${escapeHtml(row.id)}')">Open connection</button>`:''}</article>`).join('')||'<div class="empty">No evaluations yet. Shadow evaluations appear after recall when the experiment is enabled.</div>';
+}
+async function inspectDormant(id){
+ const data=await postJSON('/api/dormant/'+encodeURIComponent(id)+'/inspect',{});
+ document.getElementById('inspector').classList.add('open');openActivity();
+ const recorded=dormantEvents.find(row=>row.id===id)?.feedback;
+ document.getElementById('inspector-content').innerHTML=`<span class="brand-kicker">Dormant connection</span><div class="dormant-content">${escapeHtml(data.content)}</div><details><summary>Why this connection</summary><p style="margin-top:10px">${escapeHtml(data.connection)}</p></details><p style="margin:12px 0">Check this against your original task. A match is not confirmation that the memory is current or correct.</p>${recorded?`<p>Feedback recorded: ${escapeHtml(recorded)}</p>`:`<div class="card-actions"><button onclick="recordDormantFeedback('${escapeHtml(id)}','useful')">Useful</button><button onclick="recordDormantFeedback('${escapeHtml(id)}','irrelevant')">Irrelevant</button><button onclick="recordDormantFeedback('${escapeHtml(id)}','dismissed')">Dismiss</button></div>`}<p style="margin-top:12px">Choose Useful only if this actually helped your task. Feedback does not change ordinary memory importance or access counts.</p>`;
+}
+async function recordDormantFeedback(id,category){await postJSON('/api/dormant/'+encodeURIComponent(id)+'/feedback',{category});toast('Feedback recorded','success');document.getElementById('inspector-content').querySelectorAll('button').forEach(b=>b.disabled=true);await loadDormant()}
+// Preserve inline view controls while giving non-button controls keyboard access.
+document.querySelectorAll('.tab,.chip').forEach(el=>{el.tabIndex=0;el.setAttribute('role','button');el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click()}})});
+document.querySelectorAll('input:not([type=checkbox]),textarea,select').forEach(el=>{if(!el.labels?.length&&!el.getAttribute('aria-label'))el.setAttribute('aria-label',el.placeholder||el.title||el.id.replaceAll('-',' '))});
+
+// --- Keyboard shortcuts ---
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+  switch(e.key) {
+    case '/': e.preventDefault(); showView('search'); setTimeout(() => document.getElementById('search-input').focus(), 50); break;
+    case 'n': showView('neural'); break;
+    case 'i': showView('intelligence'); break;
+    case 's': showView('search'); break;
+    case 'h': showView('continuity'); break;
+    case 'r': showView('remember'); break;
+    case 'a': showView('analytics'); break;
+    case 'c': showView('cognition'); break;
+    case 'b': showView('bridges'); break;
+    case 'Escape': exitConstellation(); document.getElementById('inspector').classList.remove('open'); break;
+  }
+});
+
+// --- Session Pulse ---
+async function pollPulse() {
+  if (!shouldPollPulse()) return;
+  try {
+    const data = await fetchJSON('/api/pulse');
+    document.getElementById('pulse-created').textContent = data.created;
+    document.getElementById('pulse-recalled').textContent = data.recalled;
+    document.getElementById('pulse-promoted').textContent = data.promoted;
+    document.getElementById('pulse-forgotten').textContent = data.forgotten;
+    document.getElementById('pulse-total').textContent = `${data.total_events} events/hr`;
+    // sparkline
+    const sparkEl = document.getElementById('pulse-sparkline');
+    const max = Math.max(...data.sparkline, 1);
+    sparkEl.innerHTML = data.sparkline.map(v =>
+      `<div class="spark-bar" style="height:${Math.max(1, v/max*18)}px;opacity:${0.3+v/max*0.7}"></div>`
+    ).join('');
+  } catch(e) {}
+}
+
+// --- Activity Heatmap ---
+async function loadHeatmap() {
+  const days = document.getElementById('heatmap-days').value;
+  const filter = document.getElementById('heatmap-filter').value;
+  const data = await fetchJSON(`/api/heatmap?days=${days}`);
+  const container = document.getElementById('heatmap-container');
+
+  // aggregate cells into day/hour grid
+  const grid = {}; // day_offset -> hour -> count
+  let maxCount = 1;
+  for (const c of data.cells) {
+    if (filter === 'writes' && !c.event_type.includes('write')) continue;
+    if (filter === 'reads' && c.event_type !== 'recall' && !c.event_type.includes('read')) continue;
+    const key = `${c.day_offset}_${c.hour}`;
+    grid[key] = (grid[key] || 0) + c.cnt;
+    maxCount = Math.max(maxCount, grid[key]);
+  }
+
+  const hourLabels = ['12a','','','3a','','','6a','','','9a','','','12p','','','3p','','','6p','','','9p','',''];
+  let html = '<div class="heatmap-grid">';
+  // header row with day numbers
+  html += '<div class="heatmap-row"><span class="heatmap-label"></span>';
+  for (let d = 0; d < days; d++) {
+    if (d % 7 === 0) {
+      const date = new Date(Date.now() - (days - d) * 86400000);
+      html += `<div style="width:14px;font-size:8px;color:var(--text2);text-align:center">${date.getDate()}</div>`;
+    } else {
+      html += '<div style="width:14px"></div>';
+    }
+  }
+  html += '</div>';
+
+  for (let h = 0; h < 24; h++) {
+    html += `<div class="heatmap-row"><span class="heatmap-label">${hourLabels[h]}</span>`;
+    for (let d = 0; d < days; d++) {
+      const val = grid[`${d}_${h}`] || 0;
+      const intensity = val / maxCount;
+      let color;
+      if (val === 0) {
+        color = 'var(--bg3)';
+      } else if (intensity < 0.25) {
+        color = 'rgba(99,102,241,0.2)';
+      } else if (intensity < 0.5) {
+        color = 'rgba(99,102,241,0.4)';
+      } else if (intensity < 0.75) {
+        color = 'rgba(99,102,241,0.65)';
+      } else {
+        color = 'rgba(99,102,241,0.9)';
+      }
+      html += `<div class="heatmap-cell" style="background:${color}" title="Day ${d}, ${h}:00 — ${val} events"></div>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // legend
+  html += `<div class="heatmap-legend">
+    <span>Less</span>
+    <div class="hm-swatch" style="background:var(--bg3)"></div>
+    <div class="hm-swatch" style="background:rgba(99,102,241,0.2)"></div>
+    <div class="hm-swatch" style="background:rgba(99,102,241,0.4)"></div>
+    <div class="hm-swatch" style="background:rgba(99,102,241,0.65)"></div>
+    <div class="hm-swatch" style="background:rgba(99,102,241,0.9)"></div>
+    <span>More</span>
+    <span style="margin-left:12px">${Object.values(grid).reduce((a,b)=>a+b,0)} total events over ${days} days</span>
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+// --- Init ---
+resizeCanvas();
+bootDashboard();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    restartPollers();
+    if (activeView === 'neural' && neuralLoaded) pollFires();
+    pollEvents();
+    pollPulse();
+    loadStats();
+  }
+});
+window.addEventListener('resize', () => { resizeCanvas(); });
+</script>
+</body>
+</html>
