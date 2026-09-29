@@ -6,7 +6,7 @@
 
 memory for work that continues after the conversation ends.
 
-[website](https://engram-memory.dev) · [documentation](https://engram-memory.dev/getting-started/quickstart/) · [0.8.1 changelog](docs/changelog.md)
+[website](https://engram-memory.dev) · [white paper](https://github.com/Unbound-Cognition/spec/blob/main/whitepaper.md) · [spec](https://github.com/Unbound-Cognition/spec) · [desktop companion](https://github.com/Unbound-Cognition/engram-desktop) · [0.8.1 changelog](docs/changelog.md)
 
 i built engram to keep the things an agent should be able to return to: decisions,
 errors, project context, procedures, and the connections between them. it stores
@@ -301,6 +301,33 @@ model selection determines the embedding backend for recognized API models.
 configure the corresponding provider key in the process environment. changing
 embedding models requires compatible dimensions and re-embedding existing data;
 use `engram reembed --dry-run` before `engram reembed`.
+
+## zero-knowledge sync
+
+keep your memory synchronized across your machines (laptop, workstation, remote VPS) without exposing plaintext notes or vector embeddings to intermediate sync relays or servers.
+
+everything is encrypted locally using 256-bit ChaCha20-Poly1305 before leaving localhost.
+
+```sh
+# generate a local sync key (0600 permissions at ~/.config/engram/sync.key)
+engram sync keygen
+
+# check current device status and lamport sequence clock
+engram sync status
+
+# export encrypted replication log to ndjson
+engram sync export -o backup.ndjson
+
+# import and reconcile an encrypted replication log
+engram sync import backup.ndjson
+
+# add a peer node and sync
+engram sync peer add http://my-vps:8420
+engram sync pull
+engram sync push
+```
+
+both markdown text and dense vector embeddings are encrypted in transit. relays only see authenticated envelopes with random 96-bit nonces and base64 ciphertexts. conflict resolution uses Lamport sequence clocks with causal fork preservation—if two machines edit the same memory concurrently, neither thought is discarded. see the [operator guide](docs/guides/zero-knowledge-sync.md) for full details.
 
 ## use it from an agent
 
