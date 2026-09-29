@@ -78,6 +78,7 @@ nav:
     - Drift Detection: guides/drift-detection.md
     - Export & Import: guides/export-import.md
     - Multi-Agent: guides/multi-agent.md
+    - Zero-Knowledge Sync: guides/zero-knowledge-sync.md
     - Docker: guides/docker.md
   - Reference:
     - MCP Tools: reference/mcp-tools.md

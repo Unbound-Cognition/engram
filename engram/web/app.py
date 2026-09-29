@@ -93,4 +93,33 @@ def create_app(config: Config | None = None) -> FastAPI:
 
     threading.Thread(target=_warmup, daemon=True).start()
 
+    # background peer sync worker (every 60s if peers and sync key are configured)
+    def _sync_worker():
+        import time
+        from engram.sync import crypto, journal
+        from engram.sync.engine import SyncEngine
+        from engram.sync.transport import pull_from_peer, push_to_peer
+
+        time.sleep(5)
+        while True:
+            try:
+                peers = journal.get_peers(store.conn)
+                if peers:
+                    try:
+                        key = crypto.load_sync_key()
+                        engine = SyncEngine(store, key=key)
+                        for p in peers:
+                            try:
+                                pull_from_peer(p, engine, timeout=5.0)
+                                push_to_peer(p, engine, timeout=5.0)
+                            except Exception:
+                                pass
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+            time.sleep(60)
+
+    threading.Thread(target=_sync_worker, daemon=True).start()
+
     return app
