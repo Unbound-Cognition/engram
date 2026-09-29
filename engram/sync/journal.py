@@ -58,7 +58,7 @@ def get_device_id(conn: sqlite3.Connection) -> str:
     dev_id = f"{hostname}-{uuid.uuid4().hex[:8]}"
     with conn:
         conn.execute(
-            "INSERT OR REPLACE INTO sync_state (key, value) VALUES ('device_id', ?);",
+            "INSERT INTO sync_state (key, value) VALUES ('device_id', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value;",
             (dev_id,),
         )
     return dev_id
@@ -82,7 +82,7 @@ def next_sequence(conn: sqlite3.Connection) -> int:
     seq = get_current_sequence(conn) + 1
     with conn:
         conn.execute(
-            "INSERT OR REPLACE INTO sync_state (key, value) VALUES ('current_sequence', ?);",
+            "INSERT INTO sync_state (key, value) VALUES ('current_sequence', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value;",
             (str(seq),),
         )
     return seq
@@ -94,7 +94,7 @@ def advance_sequence_if_higher(conn: sqlite3.Connection, peer_seq: int) -> int:
     if peer_seq > cur_seq:
         with conn:
             conn.execute(
-                "INSERT OR REPLACE INTO sync_state (key, value) VALUES ('current_sequence', ?);",
+                "INSERT INTO sync_state (key, value) VALUES ('current_sequence', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value;",
                 (str(peer_seq),),
             )
         return peer_seq
@@ -115,9 +115,10 @@ def record_event(conn: sqlite3.Connection, envelope: dict[str, Any]) -> None:
     with conn:
         conn.execute(
             """
-            INSERT OR IGNORE INTO sync_events (
+            INSERT INTO sync_events (
                 event_id, memory_id, device_id, sequence, timestamp, operation, envelope_json, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(event_id) DO NOTHING;
             """,
             (
                 event_id,
@@ -173,6 +174,6 @@ def save_peers(conn: sqlite3.Connection, peers: list[str]) -> None:
     """Save peer endpoints."""
     with conn:
         conn.execute(
-            "INSERT OR REPLACE INTO sync_state (key, value) VALUES ('peers', ?);",
+            "INSERT INTO sync_state (key, value) VALUES ('peers', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value;",
             (json.dumps(sorted(list(set(peers)))),),
         )

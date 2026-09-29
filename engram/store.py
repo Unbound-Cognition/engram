@@ -1115,24 +1115,48 @@ CREATE INDEX IF NOT EXISTS idx_status_hist_memory ON status_history(memory_id);
 """
 
 
+class _RowDict(dict):
+    """Dict subclass that allows positional integer index access like sqlite3.Row."""
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return list(self.values())[key]
+        return super().__getitem__(key)
+
+
 class _PostgresCursor:
     def __init__(self, cursor):
         self._cursor = cursor
 
+    @property
+    def rowcount(self):
+        return self._cursor.rowcount
+
     def fetchone(self):
         row = self._cursor.fetchone()
-        return row
+        return _RowDict(row) if row is not None else None
 
     def fetchall(self):
-        return self._cursor.fetchall()
+        rows = self._cursor.fetchall()
+        return [_RowDict(r) for r in rows] if rows else []
 
     def __iter__(self):
-        return iter(self._cursor)
+        for row in self._cursor:
+            yield _RowDict(row) if row is not None else None
 
 
 class _PostgresConnectionAdapter:
     def __init__(self, conn):
         self._conn = conn
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self._conn.commit()
+        else:
+            self._conn.rollback()
 
     def _rewrite(self, query: str) -> str:
         return re.sub(r"\?", "%s", query)
@@ -1144,6 +1168,9 @@ class _PostgresConnectionAdapter:
 
     def commit(self):
         self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
 
     def close(self):
         self._conn.close()
