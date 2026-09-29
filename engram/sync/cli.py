@@ -52,6 +52,12 @@ def register_sync_subparsers(subparsers: argparse._SubParsersAction) -> None:
     push_p = sync_subs.add_parser("push", help="Push local encrypted events to peer")
     push_p.add_argument("url", nargs="?", default=None, help="Peer URL (uses configured peer if omitted)")
 
+    # relay
+    relay_p = sync_subs.add_parser("relay", help="Run untrusted zero-knowledge replication relay")
+    relay_p.add_argument("--host", default="0.0.0.0", help="Host interface to bind (default: 0.0.0.0)")
+    relay_p.add_argument("--port", type=int, default=8421, help="Port to listen on (default: 8421)")
+    relay_p.add_argument("--db", default="relay.db", help="Path to SQLite event store (default: relay.db)")
+
 
 def handle_sync_cli(args: argparse.Namespace) -> int:
     """Handle engram sync subcommands."""
@@ -153,5 +159,10 @@ def handle_sync_cli(args: argparse.Namespace) -> int:
             pushed = push_to_peer(target_url, engine)
             print(f"pushed {pushed} event(s) to {target_url}.")
             return 0
+
+    if action == "relay":
+        from engram.sync.relay import run_relay
+        run_relay(host=args.host, port=args.port, db_path=args.db)
+        return 0
 
     return 0

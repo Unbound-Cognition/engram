@@ -240,6 +240,27 @@ async def get_session_handoff(request: Request, session_id: str):
     return handoff
 
 
+@router.post("/api/session-handoffs")
+async def create_session_handoff(request: Request):
+    store = _store(request)
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse({"error": "invalid json"}, status_code=400)
+
+    session_id = str(body.get("session_id") or f"session-{uuid.uuid4().hex[:8]}")
+    summary = str(body.get("summary", ""))
+    metadata = body.get("metadata") or {
+        "task": body.get("task", ""),
+        "decisions": body.get("decisions", []),
+        "next_steps": body.get("next_steps", []),
+        "blockers": body.get("blockers", []),
+        "project_id": body.get("project_id", ""),
+    }
+    store.save_session_handoff(session_id, summary, metadata)
+    return {"status": "ok", "session_id": session_id}
+
+
 @router.get("/api/intelligence/brief")
 async def intelligence_brief(request: Request, q: str, top_k: int = 8):
     store = _fresh_store(request)

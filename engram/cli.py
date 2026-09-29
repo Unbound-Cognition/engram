@@ -160,6 +160,17 @@ def main():
     p_serve.add_argument("--mcp-sse", action="store_true", help="Start MCP server (HTTP/SSE transport)")
     p_serve.add_argument("--port", type=int, help="Port override")
 
+    # hooks
+    p_hooks = sub.add_parser("hooks", help="Manage git hooks for drift detection and memory indexing")
+    p_hooks.add_argument("action", choices=["install", "remove", "status"], help="Action to perform")
+    p_hooks.add_argument("--path", default=".", help="Target repository path (default: current directory)")
+    p_hooks.add_argument("--hook", default="post-commit", choices=["post-commit", "pre-push"], help="Git hook type (default: post-commit)")
+
+    # scan
+    p_scan = sub.add_parser("scan", help="Scan repository codebase and extract compressed structure into Engram")
+    p_scan.add_argument("path", nargs="?", default=".", help="Codebase directory path (default: current directory)")
+    p_scan.add_argument("--project", help="Project name override")
+
     # sync (zero-knowledge replication)
     from engram.sync.cli import register_sync_subparsers, handle_sync_cli
     register_sync_subparsers(sub)
@@ -270,6 +281,10 @@ def main():
         cmd_import(args, config)
     elif args.command == "migrate-postgres":
         cmd_migrate_postgres(args, config)
+    elif args.command == "hooks":
+        cmd_hooks(args, config)
+    elif args.command == "scan":
+        cmd_scan(args, config)
     elif args.command == "serve":
         cmd_serve(args, config)
     else:
@@ -759,6 +774,75 @@ def cmd_drift(args, config: Config):
         print(f"    Flagged stale: {result['flagged_stale']}")
         print(f"    Forgotten: {result['forgotten']}")
 
+    store.close()
+
+
+def cmd_hooks(args, config: Config):
+    from pathlib import Path
+    import stat
+
+    repo_path = Path(args.path).resolve()
+    git_dir = repo_path / ".git"
+    if not git_dir.exists():
+        print(f"Error: {repo_path} is not a git repository (.git not found).")
+        return
+
+    hooks_dir = git_dir / "hooks"
+    hooks_dir.mkdir(parents=True, exist_ok=True)
+    hook_file = hooks_dir / args.hook
+
+    if args.action == "install":
+        hook_script = f"""#!/bin/bash
+# Installed by engram hooks install
+# Runs drift verification on {args.hook}
+if command -v engram >/dev/null 2>&1; then
+    (
+        engram drift --search-roots "{repo_path}" --no-functions >/dev/null 2>&1
+    ) &
+fi
+"""
+        hook_file.write_text(hook_script)
+        hook_file.chmod(hook_file.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        print(f"Installed engram {args.hook} hook at {hook_file}")
+
+    elif args.action == "remove":
+        if hook_file.exists():
+            content = hook_file.read_text()
+            if "engram" in content:
+                hook_file.unlink()
+                print(f"Removed engram {args.hook} hook at {hook_file}")
+            else:
+                print(f"Hook at {hook_file} does not appear to be an engram hook. Skipping removal.")
+        else:
+            print(f"No hook found at {hook_file}")
+
+    elif args.action == "status":
+        if hook_file.exists() and "engram" in hook_file.read_text():
+            print(f"Active: engram {args.hook} hook is installed at {hook_file}")
+        else:
+            print(f"Inactive: engram {args.hook} hook is not installed")
+
+
+def cmd_scan(args, config: Config):
+    from pathlib import Path
+    from engram.store import Store
+    from engram.codebase import scan_codebase
+
+    target_path = Path(args.path).resolve()
+    if not target_path.exists():
+        print(f"Error: path {target_path} does not exist.")
+        return
+
+    store = Store(config)
+    store.init_db()
+
+    print(f"Scanning codebase at {target_path}...")
+    result = scan_codebase(target_path, store, project_name=args.project)
+
+    print("Scan complete:")
+    print(f"  Files scanned: {result.get('files_scanned', 0)}")
+    print(f"  Chunks created: {result.get('chunks_created', 0)}")
+    print(f"  Entities extracted: {result.get('entities_extracted', 0)}")
     store.close()
 
 

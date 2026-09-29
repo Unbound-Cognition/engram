@@ -1528,12 +1528,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 <div class="layout">
   <div class="header">
     <div class="brand-stack">
-      <svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" aria-hidden="true" focusable="false">
-        <path d="M424 80H224C122.4 80 40 162.4 40 264S122.4 448 224 448H424V384H224C157.7 384 104 330.3 104 264S157.7 144 224 144H360V224H208V288H424V80Z" fill="#D99A78"/>
-        <path d="M403 101H224C134 101 61 174 61 264S134 427 224 427H424M382 122H224C145.6 122 82 185.6 82 264S145.6 406 224 406H424M403 102V267H208M382 123V246H208" stroke="#111110" stroke-width="5"/>
+      <svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 927.318709 913.820720" fill="currentColor" aria-hidden="true" focusable="false">
+        <g transform="translate(-3.940476,916.094500) scale(0.100000,-0.100000)" stroke="none">
+          <path d="M62 9126 l-23 -33 4 -2534 c3 -1745 7 -2553 15 -2594 6 -33 18 -116 26 -185 42 -341 135 -701 272 -1055 44 -116 190 -417 251 -520 37 -63 168 -266 236 -365 218 -322 639 -733 1004 -978 520 -351 1124 -603 1773 -741 228 -48 305 -61 465 -75 94 -9 180 -19 191 -22 16 -4 26 1 38 17 14 21 16 103 16 822 0 878 3 838 -62 869 -18 9 -91 35 -163 58 -124 40 -324 131 -484 219 -414 230 -814 615 -1051 1014 -19 32 -45 75 -57 95 -12 20 -45 84 -73 142 -28 58 -57 116 -65 130 -53 99 -145 420 -192 670 l-28 145 -5 1745 c-5 1691 -6 1747 -24 1795 -29 75 -72 139 -119 178 -23 19 -159 101 -302 182 -143 81 -285 162 -315 180 -383 229 -492 297 -654 402 -243 160 -616 440 -616 463 0 23 -37 7 -58 -24z"/>
+          <path d="M9223 9146 c-33 -57 -620 -489 -818 -601 -27 -16 -81 -50 -120 -75 -69 -46 -245 -147 -400 -230 -210 -112 -429 -236 -482 -271 -84 -58 -130 -116 -174 -224 l-24 -60 -5 -1745 c-3 -960 -8 -1750 -12 -1756 -4 -5 -12 -50 -18 -100 -6 -49 -17 -111 -25 -139 -7 -27 -16 -68 -20 -90 -3 -22 -13 -60 -21 -85 -58 -181 -77 -236 -109 -315 -70 -172 -135 -291 -273 -500 -165 -249 -265 -370 -428 -519 -170 -157 -230 -205 -389 -310 -281 -187 -463 -276 -735 -361 -98 -30 -110 -37 -139 -85 -21 -35 -21 -37 -21 -827 0 -868 -3 -823 58 -823 59 0 292 22 372 35 47 8 103 17 125 21 56 9 282 59 395 88 209 54 253 66 352 102 57 20 126 44 153 54 54 20 119 47 325 137 287 126 658 349 927 558 297 230 666 621 847 895 281 426 439 768 579 1255 54 186 98 426 139 750 22 169 22 186 27 2665 6 2481 6 2495 -14 2532 -21 40 -56 51 -72 24z"/>
+        </g>
       </svg>
       <div class="brand-copy">
-        <span class="brand-kicker">a working memory</span>
+        <span class="brand-kicker">unbound cognition</span>
         <h1>engram</h1>
       </div>
     </div>
@@ -1560,6 +1562,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
       <a class="nav-item" href="#entities" onclick="showView('entities');return false">Entities</a>
       <a class="nav-item" href="#timeline" onclick="showView('timeline');return false">Timeline</a>
       <a class="nav-item" href="#remember" onclick="showView('remember');return false">Remember</a>
+      <a class="nav-item" href="#sync" onclick="showView('sync');return false">Sync</a>
     </div>
 
     <div class="section">
@@ -2061,6 +2064,42 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
       <div class="review-note" id="dormant-mode">Loading experiment status…</div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px"><span class="section-title" style="margin:0">Recent evaluations</span><button class="secondary" onclick="loadDormant()">Refresh</button></div>
       <div id="dormant-results" aria-live="polite"></div>
+    </div>
+
+    <!-- Sync view -->
+    <div id="view-sync" class="view-panel" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <div class="section-title" style="margin:0">Zero-Knowledge Sync</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">End-to-end encrypted event replication (ChaCha20-Poly1305 + Ed25519)</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button id="sync-trigger-btn" onclick="triggerManualSync()">Sync Now</button>
+          <button class="secondary" onclick="loadSync()">Refresh</button>
+        </div>
+      </div>
+
+      <div id="sync-node-card" class="shell-card" style="margin-bottom:16px;padding:14px">
+        <div style="display:flex;gap:24px;flex-wrap:wrap">
+          <div><span style="font-size:11px;color:var(--text2)">Device ID:</span> <code id="sync-device-id" style="font-size:12px;color:var(--accent)">...</code></div>
+          <div><span style="font-size:11px;color:var(--text2)">Encryption Key:</span> <span id="sync-key-badge" class="badge">checking...</span></div>
+          <div><span style="font-size:11px;color:var(--text2)">Journal Sequence:</span> <span id="sync-seq" style="font-weight:600">0</span></div>
+          <div><span style="font-size:11px;color:var(--text2)">Configured Peers:</span> <span id="sync-peers-count" style="font-weight:600">0</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Replication Peers</div>
+      <div id="sync-peers-list" style="margin-bottom:20px"><div class="empty">Loading peers...</div></div>
+
+      <div class="shell-card" style="padding:14px;margin-bottom:20px">
+        <div style="font-weight:600;font-size:13px;margin-bottom:8px">Connect New Peer</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" id="sync-new-peer-url" placeholder="Peer URL (e.g. http://192.168.1.50:8420 or http://relay.example.com:8421)" style="flex:3;min-width:260px;font-size:12px">
+          <button onclick="addSyncPeer()" style="font-size:12px">Add Peer</button>
+        </div>
+      </div>
+
+      <div id="sync-status-msg" style="font-size:12px;color:var(--text2)"></div>
     </div>
   </main>
 
@@ -4570,6 +4609,122 @@ async function extractPatterns() {
   loadPatterns();
 }
 
+// --- Sync (Zero-Knowledge Replication) ---
+async function loadSync() {
+  const statusEl = document.getElementById('sync-status-msg');
+  try {
+    const data = await fetchJSON('/api/sync/status');
+    const devId = document.getElementById('sync-device-id');
+    if (devId) devId.textContent = data.device_id || 'unknown';
+    const seq = document.getElementById('sync-seq');
+    if (seq) seq.textContent = data.sequence || 0;
+
+    const keyBadge = document.getElementById('sync-key-badge');
+    if (keyBadge) {
+      if (data.has_key) {
+        keyBadge.textContent = 'active';
+        keyBadge.style.color = 'var(--green)';
+      } else {
+        keyBadge.textContent = 'missing (set ENGRAM_SYNC_KEY)';
+        keyBadge.style.color = 'var(--bad)';
+      }
+    }
+
+    const peers = data.peers || [];
+    const countEl = document.getElementById('sync-peers-count');
+    if (countEl) countEl.textContent = peers.length;
+
+    const listEl = document.getElementById('sync-peers-list');
+    if (listEl) {
+      if (!peers.length) {
+        listEl.innerHTML = '<div class="empty">No peers configured. Add a peer URL below to replicate events.</div>';
+      } else {
+        listEl.innerHTML = peers.map(p => `
+          <div class="shell-card" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;margin-bottom:8px">
+            <div>
+              <code style="font-size:13px;font-weight:600">${escapeHtml(p)}</code>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="secondary" style="font-size:11px;color:var(--bad);border-color:var(--bad)" onclick="removeSyncPeer('${escapeHtml(p)}')">Remove</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  } catch (err) {
+    if (statusEl) statusEl.textContent = 'Failed to load sync status: ' + err.message;
+  }
+}
+
+async function triggerManualSync() {
+  const btn = document.getElementById('sync-trigger-btn');
+  const statusEl = document.getElementById('sync-status-msg');
+  if (btn) btn.disabled = true;
+  if (statusEl) statusEl.textContent = 'Syncing events with peers...';
+  try {
+    const res = await fetch('/api/sync/trigger', { method: 'POST' });
+    const data = await res.json();
+    if (data.error) {
+      if (statusEl) statusEl.textContent = 'Sync error: ' + data.error;
+      toast('Sync error: ' + data.error, 'error');
+    } else {
+      if (statusEl) statusEl.textContent = `Sync completed: pulled ${data.pulled || 0} events, pushed ${data.pushed || 0} events.`;
+      toast(`Sync done: +${data.pulled || 0} / -${data.pushed || 0}`, 'success');
+      loadSync();
+    }
+  } catch (err) {
+    if (statusEl) statusEl.textContent = 'Sync request failed: ' + err.message;
+    toast('Sync request failed: ' + err.message, 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function addSyncPeer() {
+  const input = document.getElementById('sync-new-peer-url');
+  if (!input) return;
+  const url = (input.value || '').trim();
+  if (!url) return;
+  const statusEl = document.getElementById('sync-status-msg');
+  if (statusEl) statusEl.textContent = 'Adding peer...';
+  try {
+    const res = await fetch('/api/sync/peers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ peer: url, action: 'add' })
+    });
+    const data = await res.json();
+    if (data.error) {
+      if (statusEl) statusEl.textContent = 'Error: ' + data.error;
+      toast(data.error, 'error');
+    } else {
+      input.value = '';
+      if (statusEl) statusEl.textContent = 'Peer added successfully.';
+      toast('Peer added', 'success');
+      loadSync();
+    }
+  } catch (err) {
+    if (statusEl) statusEl.textContent = 'Failed to add peer: ' + err.message;
+  }
+}
+
+async function removeSyncPeer(url) {
+  if (!confirm('Remove peer ' + url + '?')) return;
+  const statusEl = document.getElementById('sync-status-msg');
+  try {
+    await fetch('/api/sync/peers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ peer: url, action: 'remove' })
+    });
+    if (statusEl) statusEl.textContent = 'Peer removed.';
+    toast('Peer removed', 'info');
+    loadSync();
+  } catch (err) {
+    if (statusEl) statusEl.textContent = 'Failed to remove peer: ' + err.message;
+  }
+}
+
 // --- Export ---
 function toggleExportForm() {
   document.getElementById('export-form').classList.toggle('open');
@@ -4681,6 +4836,7 @@ function showView(name) {
   if (name === 'cognition') { loadRerankerStatus(); drawRetentionCurves(); drawSurpriseGauge(lastSurprise); }
   if (name === 'bridges') loadBridges();
   if (name === 'patterns') loadPatterns();
+  if (name === 'sync') loadSync();
   if (initialBootComplete) restartPollers();
 }
 
@@ -4694,6 +4850,7 @@ intelligence:['Intelligence','Build a focused brief or compare two retrieval pat
 entities:['Entities','Inspect names, aliases, and the memories that connect them.'],
 timeline:['Timeline','Find memories within a date range.'],
 remember:['Remember','Save context that should be available in a later session.'],
+sync:['Sync','Zero-knowledge end-to-end encrypted event replication between peers.'],
 analytics:['Analytics','Understand what is stored and how it is used.'],
 heatmap:['Heatmap','See when memories have been accessed.'],
 context:['Context','Inspect the memory layers available for a session.'],
