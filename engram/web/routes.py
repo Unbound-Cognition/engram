@@ -161,19 +161,23 @@ async def get_memory(request: Request, memory_id: str):
 
 @router.get("/api/search")
 async def search_memories(request: Request, q: str = Query(..., min_length=1, max_length=4000),
-                          top_k: int | None = Query(None, ge=1, le=100), debug: bool = False):
+                          top_k: int | None = Query(None, ge=1, le=100),
+                          layer: str | None = Query(None),
+                          debug: bool = False):
     store = _store(request)
     config = _config(request)
     top_k = config.retrieval.top_k if top_k is None else top_k
     if not 1 <= top_k <= 100:
         return JSONResponse({"error": "top_k must be from 1 to 100"}, status_code=400)
     try:
-        result = hybrid_search(q, store, config, top_k=top_k, debug=debug)
+        result = hybrid_search(q, store, config, top_k=top_k if not layer or layer == "all" else top_k * 2, debug=debug)
     except ValueError:
         return JSONResponse({"error": "query and retrieval parameters must be valid"}, status_code=400)
 
     if debug:
         results, dbg = result
+        if layer and layer != "all":
+            results = [r for r in results if r.memory.layer == layer][:top_k]
         entity_ids = _collect_entity_ids(store, [r.memory.id for r in results])
         return {
             "results": [_result_dict(r) for r in results],
@@ -182,7 +186,9 @@ async def search_memories(request: Request, q: str = Query(..., min_length=1, ma
             "explanation": dbg.to_dict(),
         }
     results = result
-    push_event("search", {"query": q, "results": len(results)})
+    if layer and layer != "all":
+        results = [r for r in results if r.memory.layer == layer][:top_k]
+    push_event("search", {"query": q, "results": len(results), "layer": layer})
     entity_ids = _collect_entity_ids(store, [r.memory.id for r in results])
     return {"results": [_result_dict(r) for r in results], "entity_ids": entity_ids}
 
