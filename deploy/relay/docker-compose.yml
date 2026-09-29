@@ -1,0 +1,16 @@
+services:
+  engram-relay:
+    build:
+      context: ../..
+      dockerfile: deploy/relay/Dockerfile
+    container_name: engram-relay
+    restart: unless-stopped
+    ports:
+      - "8421:8421"
+    volumes:
+      - relay-data:/data
+    environment:
+      - PYTHONUNBUFFERED=1
+
+volumes:
+  relay-data:
