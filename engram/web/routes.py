@@ -1446,3 +1446,56 @@ def _result_dict(r: RetrievalResult) -> dict:
     d["score"] = round(r.score, 4)
     d["sources"] = {k: round(v, 4) for k, v in r.sources.items()}
     return d
+
+
+# ---------------------------------------------------------------------------
+# Zero-Knowledge Multi-Device Sync Endpoints (spec/05-zero-knowledge-sync.md)
+# ---------------------------------------------------------------------------
+
+@router.get("/api/sync/status")
+async def sync_status(request: Request):
+    store = _store(request)
+    from engram.sync import journal
+    dev_id = journal.get_device_id(store.conn)
+    seq = journal.get_current_sequence(store.conn)
+    return {"status": "ok", "device_id": dev_id, "sequence": seq}
+
+
+@router.get("/api/sync/events")
+async def sync_get_events(request: Request, since: int = Query(0, ge=0), limit: int = Query(500, ge=1, le=5000)):
+    store = _store(request)
+    from engram.sync import journal
+    events = journal.get_events_since(store.conn, since_sequence=since, limit=limit)
+    return {"status": "ok", "events": events, "count": len(events)}
+
+
+@router.post("/api/sync/events")
+async def sync_post_events(request: Request):
+    store = _store(request)
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse({"error": "invalid json body"}, status_code=400)
+
+    events = body.get("events", [])
+    if not isinstance(events, list):
+        return JSONResponse({"error": "events must be a list"}, status_code=400)
+
+    from engram.sync.engine import SyncEngine
+    try:
+        from engram.sync import crypto
+        key = crypto.load_sync_key()
+    except Exception as exc:
+        return JSONResponse({"error": f"server sync key not configured: {exc}"}, status_code=500)
+
+    engine = SyncEngine(store, key=key)
+    applied = 0
+    skipped = 0
+    for env in events:
+        if engine.apply_envelope(env):
+            applied += 1
+        else:
+            skipped += 1
+
+    return {"status": "ok", "received": len(events), "applied": applied, "skipped": skipped}
+

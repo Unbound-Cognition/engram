@@ -160,7 +160,13 @@ def main():
     p_serve.add_argument("--mcp-sse", action="store_true", help="Start MCP server (HTTP/SSE transport)")
     p_serve.add_argument("--port", type=int, help="Port override")
 
+    # sync (zero-knowledge replication)
+    from engram.sync.cli import register_sync_subparsers, handle_sync_cli
+    register_sync_subparsers(sub)
+
     args = parser.parse_args()
+    if args.command == "sync":
+        raise SystemExit(handle_sync_cli(args))
     if args.command == "demo":
         if args.config:
             parser.error("demo uses its own isolated configuration; omit --config")
