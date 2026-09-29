@@ -1455,10 +1455,89 @@ def _result_dict(r: RetrievalResult) -> dict:
 @router.get("/api/sync/status")
 async def sync_status(request: Request):
     store = _store(request)
-    from engram.sync import journal
+    from engram.sync import journal, crypto
     dev_id = journal.get_device_id(store.conn)
     seq = journal.get_current_sequence(store.conn)
-    return {"status": "ok", "device_id": dev_id, "sequence": seq}
+    peers = journal.get_peers(store.conn)
+    has_key = False
+    try:
+        crypto.load_sync_key()
+        has_key = True
+    except Exception:
+        has_key = False
+
+    return {
+        "status": "ok",
+        "device_id": dev_id,
+        "sequence": seq,
+        "peers": peers,
+        "has_key": has_key,
+    }
+
+
+@router.post("/api/sync/peers")
+async def sync_update_peers(request: Request):
+    store = _store(request)
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse({"error": "invalid json body"}, status_code=400)
+
+    peer = str(body.get("peer", "")).strip().rstrip("/")
+    action = str(body.get("action", "add")).strip().lower()
+
+    if not peer:
+        return JSONResponse({"error": "peer url is required"}, status_code=400)
+
+    from engram.sync import journal
+    current_peers = journal.get_peers(store.conn)
+
+    if action == "add":
+        if peer not in current_peers:
+            current_peers.append(peer)
+    elif action == "remove":
+        current_peers = [p for p in current_peers if p != peer]
+
+    journal.save_peers(store.conn, current_peers)
+    return {"status": "ok", "peers": current_peers}
+
+
+@router.post("/api/sync/trigger")
+async def sync_trigger(request: Request):
+    store = _store(request)
+    from engram.sync import crypto, journal
+    from engram.sync.engine import SyncEngine
+    from engram.sync.transport import pull_from_peer, push_to_peer
+
+    try:
+        key = crypto.load_sync_key()
+    except Exception as exc:
+        return JSONResponse({"error": f"sync key not configured: {exc}"}, status_code=400)
+
+    peers = journal.get_peers(store.conn)
+    if not peers:
+        return {"status": "ok", "message": "no peers configured", "pulled": 0, "pushed": 0, "errors": []}
+
+    engine = SyncEngine(store, key=key)
+    total_pulled = 0
+    total_pushed = 0
+    errors = []
+
+    for p in peers:
+        try:
+            pulled, _ = pull_from_peer(p, engine, timeout=5.0)
+            total_pulled += pulled
+            pushed = push_to_peer(p, engine, timeout=5.0)
+            total_pushed += pushed
+        except Exception as exc:
+            errors.append(f"{p}: {exc}")
+
+    return {
+        "status": "ok",
+        "pulled": total_pulled,
+        "pushed": total_pushed,
+        "errors": errors,
+    }
 
 
 @router.get("/api/sync/events")
